@@ -1,20 +1,15 @@
 {
   "version": 2,
-  "generatedAt": "2026-10-10T11:46:53.035Z",
+  "generatedAt": "2026-10-11T07:07:58.070Z",
   "evidence": "Local video hashes and saved YouTube receipts; no live YouTube query",
   "uploader": "tutorial/shared/youtube-upload.ts",
   "summary01to20": {
     "rendered": 20,
-    "uploaded": 16,
-    "pendingUpload": 4,
+    "uploaded": 20,
+    "pendingUpload": 0,
     "guidePublished": 2
   },
   "pendingUploadIds": [
-    "order-confirmation",
-    "order-payment-evidence",
-    "order-shipping-tracking",
-    "order-delivery-completion",
-    "order-cancellation",
     "order-refunds-recovery",
     "order-special-handling",
     "shipping-methods",
@@ -375,8 +370,13 @@
       "id": "order-confirmation",
       "folder": "17-order-confirmation",
       "title": "Confirm an order and commit its stock",
-      "status": "rendered",
+      "status": "uploaded",
       "runId": "2026-10-09T14-27-19-065Z-synchronized",
+      "videoId": "M1WtXyTrebI",
+      "url": "https://www.youtube.com/watch?v=M1WtXyTrebI",
+      "visibility": "unlisted",
+      "processing": "processing",
+      "verifiedAt": "2026-10-11T07:07:38.602Z",
       "renderDir": "/home/khalid/Desktop/projects/saas/ts-starter/tutorial/17-order-confirmation/artifacts/2026-10-09T14-27-19-065Z-synchronized/render",
       "videoPath": "/home/khalid/Desktop/projects/saas/ts-starter/tutorial/17-order-confirmation/artifacts/2026-10-09T14-27-19-065Z-synchronized/render/video.mp4",
       "videoSha256": "b91c444fa126178d0481deeaef1b230ab97940bab7b0115771514a63383813ca",
@@ -384,14 +384,23 @@
       "reviewApproved": false,
       "watchedWithAudio": false,
       "guideStatus": "prepared",
-      "issues": []
+      "issues": [],
+      "lastUploadAttempt": {
+        "at": "2026-10-11T07:07:38.603Z",
+        "state": "uploaded"
+      }
     },
     {
       "id": "order-payment-evidence",
       "folder": "18-order-payment-evidence",
       "title": "Record and correct payment evidence",
-      "status": "rendered",
+      "status": "uploaded",
       "runId": "2026-10-09T17-08-22-327Z-synchronized",
+      "videoId": "F5DlsopmhzU",
+      "url": "https://www.youtube.com/watch?v=F5DlsopmhzU",
+      "visibility": "unlisted",
+      "processing": "processing",
+      "verifiedAt": "2026-10-11T07:07:43.114Z",
       "renderDir": "/home/khalid/Desktop/projects/saas/ts-starter/tutorial/18-order-payment-evidence/artifacts/2026-10-09T17-08-22-327Z-synchronized/render",
       "videoPath": "/home/khalid/Desktop/projects/saas/ts-starter/tutorial/18-order-payment-evidence/artifacts/2026-10-09T17-08-22-327Z-synchronized/render/video.mp4",
       "videoSha256": "25ae55511c85fff9d7b38784dce391a5a761a9525f0ea5b81e6dc4ec1332811b",
@@ -399,14 +408,23 @@
       "reviewApproved": false,
       "watchedWithAudio": false,
       "guideStatus": "prepared",
-      "issues": []
+      "issues": [],
+      "lastUploadAttempt": {
+        "at": "2026-10-11T07:07:43.114Z",
+        "state": "uploaded"
+      }
     },
     {
       "id": "order-shipping-tracking",
       "folder": "19-order-shipping-tracking",
       "title": "Mark an order shipped and update tracking",
-      "status": "rendered",
+      "status": "uploaded",
       "runId": "2026-10-09T17-10-40-391Z-synchronized",
+      "videoId": "xuqKUyPHdmU",
+      "url": "https://www.youtube.com/watch?v=xuqKUyPHdmU",
+      "visibility": "unlisted",
+      "processing": "processing",
+      "verifiedAt": "2026-10-11T07:07:48.048Z",
       "renderDir": "/home/khalid/Desktop/projects/saas/ts-starter/tutorial/19-order-shipping-tracking/artifacts/2026-10-09T17-10-40-391Z-synchronized/render",
       "videoPath": "/home/khalid/Desktop/projects/saas/ts-starter/tutorial/19-order-shipping-tracking/artifacts/2026-10-09T17-10-40-391Z-synchronized/render/video.mp4",
       "videoSha256": "42e3206ccd5dd3a98e6ec05a4c8ebef33eac7329fd4e3379c25697a1d5e7756a",
@@ -414,14 +432,23 @@
       "reviewApproved": false,
       "watchedWithAudio": false,
       "guideStatus": "prepared",
-      "issues": []
+      "issues": [],
+      "lastUploadAttempt": {
+        "at": "2026-10-11T07:07:48.049Z",
+        "state": "uploaded"
+      }
     },
     {
       "id": "order-delivery-completion",
       "folder": "20-order-delivery-completion",
       "title": "Record delivery and complete an order",
-      "status": "rendered",
+      "status": "uploaded",
       "runId": "2026-10-09T17-11-58-879Z-synchronized",
+      "videoId": "x_lYc0eVV6E",
+      "url": "https://www.youtube.com/watch?v=x_lYc0eVV6E",
+      "visibility": "unlisted",
+      "processing": "processing",
+      "verifiedAt": "2026-10-11T07:07:52.624Z",
       "renderDir": "/home/khalid/Desktop/projects/saas/ts-starter/tutorial/20-order-delivery-completion/artifacts/2026-10-09T17-11-58-879Z-synchronized/render",
       "videoPath": "/home/khalid/Desktop/projects/saas/ts-starter/tutorial/20-order-delivery-completion/artifacts/2026-10-09T17-11-58-879Z-synchronized/render/video.mp4",
       "videoSha256": "70fcd7e80523314e8bfd25fc66f0de51767aa1a605c49edeabe156ac4dfb60e4",
@@ -429,14 +456,23 @@
       "reviewApproved": false,
       "watchedWithAudio": false,
       "guideStatus": "prepared",
-      "issues": []
+      "issues": [],
+      "lastUploadAttempt": {
+        "at": "2026-10-11T07:07:52.625Z",
+        "state": "uploaded"
+      }
     },
     {
       "id": "order-cancellation",
       "folder": "21-order-cancellation",
       "title": "Cancel an order with the correct stock outcome",
-      "status": "rendered",
+      "status": "uploaded",
       "runId": "2026-10-10T05-18-07-059Z-synchronized",
+      "videoId": "svS73ICFwzU",
+      "url": "https://www.youtube.com/watch?v=svS73ICFwzU",
+      "visibility": "unlisted",
+      "processing": "processing",
+      "verifiedAt": "2026-10-11T07:07:57.242Z",
       "renderDir": "/home/khalid/Desktop/projects/saas/ts-starter/tutorial/21-order-cancellation/artifacts/2026-10-10T05-18-07-059Z-synchronized/render",
       "videoPath": "/home/khalid/Desktop/projects/saas/ts-starter/tutorial/21-order-cancellation/artifacts/2026-10-10T05-18-07-059Z-synchronized/render/video.mp4",
       "videoSha256": "a5f9e3df89ca7946ded1fcfb3706232acc3c21494eb663f56476948ea49dd2bf",
@@ -444,7 +480,11 @@
       "reviewApproved": false,
       "watchedWithAudio": false,
       "guideStatus": "prepared",
-      "issues": []
+      "issues": [],
+      "lastUploadAttempt": {
+        "at": "2026-10-11T07:07:57.243Z",
+        "state": "uploaded"
+      }
     },
     {
       "id": "order-refunds-recovery",
