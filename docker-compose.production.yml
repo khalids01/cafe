@@ -1,9 +1,23 @@
 # PostgreSQL/Redis are provisioned separately per shop in Dokploy.
 services:
+  migrate:
+    image: khalids01/ecommerce-shops:api-${BRAND:?Set BRAND}-${IMAGE_TAG:?Set IMAGE_TAG}
+    pull_policy: always
+    restart: "no"
+    command: ["bun", "run", "--cwd", "packages/db", "db:migrate:deploy"]
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL}
+    networks:
+      - dokploy-network
+
   web:
     image: khalids01/ecommerce-shops:web-${BRAND:?Set BRAND}-${IMAGE_TAG:?Set IMAGE_TAG}
     pull_policy: always
     restart: unless-stopped
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
     environment:
       NODE_ENV: production
       HOST: 0.0.0.0
@@ -29,6 +43,9 @@ services:
     image: khalids01/ecommerce-shops:api-${BRAND:?Set BRAND}-${IMAGE_TAG:?Set IMAGE_TAG}
     pull_policy: always
     restart: unless-stopped
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
     env_file:
       - .env
     environment:

@@ -2,7 +2,7 @@
 
 This setup publishes two images to the private Docker Hub repository `khalids01/ecommerce-shops`. Dokploy fetches this GitHub repo, reads `docker-compose.production.yml`, pulls the images and injects runtime configuration from the Compose service's Environment settings.
 
-Each shop has separate application containers, PostgreSQL, Redis, domains, credentials and backups. The production Compose file contains web/API only; provision PostgreSQL and Redis separately in Dokploy.
+Each shop has separate application containers, PostgreSQL, Redis, domains, credentials and backups. The production Compose file contains web/API and a one-shot migration service; provision PostgreSQL and Redis separately in Dokploy.
 
 ## Quick start for the current `ecommerce` branch
 
@@ -113,7 +113,19 @@ Both images are built and pushed. The script prints the Dokploy `IMAGE_TAG`. It 
 
 Create a dedicated PostgreSQL database and Redis service for this shop. Put them on a network reachable by the API (`dokploy-network` is used here), and use their internal service DNS names in connection URLs. `localhost` inside the API container refers to that container, not your VPS or a separate database container. Avoid publishing database ports to the internet.
 
-Before application deployment, provision the schema required by the selected release and the RBAC/owner prerequisites described in `docs/ecommerce-runtime-operations-v3.md`. Docker builds only generate the Prisma client; neither builds nor container startup apply migrations, seed data or create an owner. Review the exact database target, migration state and backups before separately applying schema changes. No database operation was performed as part of creating this setup.
+On deployment, the separate `migrate` container uses the same release image as the API and runs `bun run --cwd packages/db db:migrate:deploy` (`prisma migrate deploy`). It applies pending checked-in migrations and exits with code 0 on success. It has `restart: "no"`; web and API depend on `service_completed_successfully`, so Compose will not start the new application containers if migrations fail. It receives only `DATABASE_URL` and `NODE_ENV`. Use regular Docker Compose, not Swarm Stack, for this dependency behavior.
+
+Before clicking Deploy, verify the database target, migration history and a restorable backup for an existing database. Existing schemas without matching Prisma migration history require a reviewed baseline; do not reset them. PostgreSQL must already be running and reachable: the migration service does not provision or wait for an external database. Review migration logs if deployment fails; a successful exited migration container is expected.
+
+Docker builds only generate the Prisma client. Neither this migration container nor application startup seeds data or creates an owner. Provision the RBAC/owner prerequisites separately. Changing the immutable release tag selects a matching migration image. Migration reruns apply only pending migrations; retain SHA tags for releases. No migrations were executed while implementing this configuration.
+
+From the deployment checkout with its service `.env`, the equivalent standalone operation is:
+
+```bash
+docker compose -f docker-compose.production.yml run --rm --no-deps migrate
+```
+
+This runs only migrations and removes the temporary container afterward. It does not start web/API or seed data.
 
 Configure OAuth apps, SMTP and file storage as needed. The server currently requires all three OAuth provider ID/secret pairs even if you intend to use only one provider. Use real provider configuration for enabled sign-in flows. File uploads require your separately provisioned file server.
 
