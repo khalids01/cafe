@@ -6,7 +6,7 @@ import type { ShopProduct } from "../shop/types";
 import { pageSeoDefaults, type PageSeo } from "./metadata";
 
 export const getPageSeo = createServerFn({ method: "GET" })
-  .inputValidator((page: unknown) => {
+  .validator((page: unknown) => {
     if (page !== "home" && page !== "about") throw new Error("Invalid SEO page");
     return page;
   })
@@ -22,7 +22,7 @@ export const getPageSeo = createServerFn({ method: "GET" })
   });
 
 export const getProductForPage = createServerFn({ method: "GET" })
-  .inputValidator((slug: unknown) => {
+  .validator((slug: unknown) => {
     if (typeof slug !== "string" || !slug || slug.length > 160) throw new Error("Invalid product slug");
     return slug;
   })
