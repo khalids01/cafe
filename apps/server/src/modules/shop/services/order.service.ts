@@ -61,12 +61,15 @@ async function runSerializableCheckout(
           };
         }
       }
-      if (code !== "P2034" || attempt === maxAttempts) {
+      if (code !== "P2034") {
         throw error;
       }
     }
   }
-  throw new ShopServiceError("Checkout could not be completed", 409);
+  throw new ShopServiceError(
+    "Checkout could not be completed due to simultaneous updates. Please try again.",
+    409,
+  );
 }
 
 function checkoutLineFromItem(item: any) {
