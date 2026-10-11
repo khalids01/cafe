@@ -1,6 +1,6 @@
 # Tutorial production checklist
 
-43 focused topics plus one retained full workflow. Videos 01–25 are rendered with audio. Upload receipts exist for 01–16; 17–25 await upload. Only 01–02 are published in Guide; 03–25 await full playback review. Tutorials 26–43 remain prepared for future production. See [production instructions](./synchronized-production.readme.md).
+43 focused topics plus one retained full workflow. Videos 01–30 are rendered with audio. Upload receipts exist for 01–21; 22–30 await upload. Only 01–02 are published in Guide; 03–30 await full playback review. Tutorials 31–43 remain prepared for future production. See [production instructions](./synchronized-production.readme.md).
 
 | Folder | Topic | Capture mode (prepared code) | Audio | Review |
 | --- | --- | --- | --- | --- |
@@ -30,11 +30,11 @@
 | `23-order-special-handling` | Handle food preparation, tracked gadgets and warranty | walkthrough (rendered) | Generated | Pending playback |
 | `24-shipping-methods` | Configure checkout shipping methods | walkthrough (rendered) | Generated | Pending playback |
 | `25-courier-overview` | Understand courier operations and exceptions | walkthrough (rendered) | Generated | Pending playback |
-| `26-courier-connections` | Configure and review a courier connection | walkthrough | Pending | Pending |
-| `27-courier-delivery-options` | Map courier delivery options to shipping methods | walkthrough | Pending | Pending |
-| `28-courier-assignment-rules` | Configure and verify courier assignment rules | walkthrough | Pending | Pending |
-| `29-courier-shipments` | Review shipment booking and parcel handoff | walkthrough | Pending | Pending |
-| `30-courier-returns` | Track courier returns and recover received goods | walkthrough | Pending | Pending |
+| `26-courier-connections` | Configure and review a courier connection | walkthrough (rendered) | Generated | Pending playback |
+| `27-courier-delivery-options` | Map courier delivery options to shipping methods | walkthrough (rendered) | Generated | Pending playback |
+| `28-courier-assignment-rules` | Configure and verify courier assignment rules | walkthrough (rendered) | Generated | Pending playback |
+| `29-courier-shipments` | Review shipment booking and parcel handoff | walkthrough (rendered) | Generated | Pending playback |
+| `30-courier-returns` | Track courier returns and recover received goods | walkthrough (rendered) | Generated | Pending playback |
 | `31-courier-cod-collections` | Record courier COD collection evidence | walkthrough | Pending | Pending |
 | `32-store-settings` | Configure store details and checkout defaults | walkthrough | Pending | Pending |
 | `33-store-page-seo` | Save and publish home and about page SEO | walkthrough | Pending | Pending |

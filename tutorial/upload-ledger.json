@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generatedAt": "2026-10-11T07:07:58.070Z",
+  "generatedAt": "2026-10-11T08:50:15.834Z",
   "evidence": "Local video hashes and saved YouTube receipts; no live YouTube query",
   "uploader": "tutorial/shared/youtube-upload.ts",
   "summary01to20": {
@@ -13,7 +13,12 @@
     "order-refunds-recovery",
     "order-special-handling",
     "shipping-methods",
-    "courier-overview"
+    "courier-overview",
+    "courier-connections",
+    "courier-delivery-options",
+    "courier-assignment-rules",
+    "courier-shipments",
+    "courier-returns"
   ],
   "entries": [
     {
@@ -550,41 +555,76 @@
       "id": "courier-connections",
       "folder": "26-courier-connections",
       "title": "Configure and review a courier connection",
-      "status": "pending-production",
-      "captureComplete": false,
-      "guideStatus": "prepared"
+      "status": "rendered",
+      "runId": "2026-10-11T07-36-56-855Z-synchronized",
+      "renderDir": "/home/khalid/Desktop/projects/saas/ts-starter/tutorial/26-courier-connections/artifacts/2026-10-11T07-36-56-855Z-synchronized/render",
+      "videoPath": "/home/khalid/Desktop/projects/saas/ts-starter/tutorial/26-courier-connections/artifacts/2026-10-11T07-36-56-855Z-synchronized/render/video.mp4",
+      "videoSha256": "e8fdf3b51c66baff8bc6a2fc2276dea8cd1b2442cac3c1b049d5cba39e2e2c47",
+      "durationSec": 63.787696,
+      "reviewApproved": false,
+      "watchedWithAudio": false,
+      "guideStatus": "prepared",
+      "issues": []
     },
     {
       "id": "courier-delivery-options",
       "folder": "27-courier-delivery-options",
       "title": "Map courier delivery options to shipping methods",
-      "status": "pending-production",
-      "captureComplete": false,
-      "guideStatus": "prepared"
+      "status": "rendered",
+      "runId": "2026-10-11T07-37-56-803Z-synchronized",
+      "renderDir": "/home/khalid/Desktop/projects/saas/ts-starter/tutorial/27-courier-delivery-options/artifacts/2026-10-11T07-37-56-803Z-synchronized/render",
+      "videoPath": "/home/khalid/Desktop/projects/saas/ts-starter/tutorial/27-courier-delivery-options/artifacts/2026-10-11T07-37-56-803Z-synchronized/render/video.mp4",
+      "videoSha256": "e6f45807b734fae7f590e106d52faba1c54b29e84b82fb698906fdead70dd803",
+      "durationSec": 59.921333,
+      "reviewApproved": false,
+      "watchedWithAudio": false,
+      "guideStatus": "prepared",
+      "issues": []
     },
     {
       "id": "courier-assignment-rules",
       "folder": "28-courier-assignment-rules",
       "title": "Configure and verify courier assignment rules",
-      "status": "pending-production",
-      "captureComplete": false,
-      "guideStatus": "prepared"
+      "status": "rendered",
+      "runId": "2026-10-11T07-38-20-679Z-synchronized",
+      "renderDir": "/home/khalid/Desktop/projects/saas/ts-starter/tutorial/28-courier-assignment-rules/artifacts/2026-10-11T07-38-20-679Z-synchronized/render",
+      "videoPath": "/home/khalid/Desktop/projects/saas/ts-starter/tutorial/28-courier-assignment-rules/artifacts/2026-10-11T07-38-20-679Z-synchronized/render/video.mp4",
+      "videoSha256": "9e28b0bf615438645ebc074fa6e74df0ef1da758fb287f1b52530ee31ff91137",
+      "durationSec": 62.488,
+      "reviewApproved": false,
+      "watchedWithAudio": false,
+      "guideStatus": "prepared",
+      "issues": []
     },
     {
       "id": "courier-shipments",
       "folder": "29-courier-shipments",
       "title": "Review shipment booking and parcel handoff",
-      "status": "pending-production",
-      "captureComplete": false,
-      "guideStatus": "prepared"
+      "status": "rendered",
+      "runId": "2026-10-11T07-38-39-378Z-synchronized",
+      "renderDir": "/home/khalid/Desktop/projects/saas/ts-starter/tutorial/29-courier-shipments/artifacts/2026-10-11T07-38-39-378Z-synchronized/render",
+      "videoPath": "/home/khalid/Desktop/projects/saas/ts-starter/tutorial/29-courier-shipments/artifacts/2026-10-11T07-38-39-378Z-synchronized/render/video.mp4",
+      "videoSha256": "8cb9f982a6884b749b28f6f32869eaa0c5b9e11954fdb46455c2ac931feb1822",
+      "durationSec": 60.821029,
+      "reviewApproved": false,
+      "watchedWithAudio": false,
+      "guideStatus": "prepared",
+      "issues": []
     },
     {
       "id": "courier-returns",
       "folder": "30-courier-returns",
       "title": "Track courier returns and recover received goods",
-      "status": "pending-production",
-      "captureComplete": false,
-      "guideStatus": "prepared"
+      "status": "rendered",
+      "runId": "2026-10-11T07-38-51-469Z-synchronized",
+      "renderDir": "/home/khalid/Desktop/projects/saas/ts-starter/tutorial/30-courier-returns/artifacts/2026-10-11T07-38-51-469Z-synchronized/render",
+      "videoPath": "/home/khalid/Desktop/projects/saas/ts-starter/tutorial/30-courier-returns/artifacts/2026-10-11T07-38-51-469Z-synchronized/render/video.mp4",
+      "videoSha256": "1576cda49fa107902734e15e6358989aa607bde35e521ca2e20dd9808b48ab4a",
+      "durationSec": 62.187696,
+      "reviewApproved": false,
+      "watchedWithAudio": false,
+      "guideStatus": "prepared",
+      "issues": []
     },
     {
       "id": "courier-cod-collections",
