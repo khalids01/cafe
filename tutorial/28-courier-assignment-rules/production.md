@@ -12,7 +12,7 @@ Capture mode: **walkthrough**. Prepared code only; audio, capture and playback r
 
 Assignment rules determine how eligible orders are routed to courier connections and options. Open Assignment rules. Plan the conditions and priority so an order has a predictable outcome instead of relying on an accidental overlap.
 
-Focus: `{"role":"heading","name":"Assignment rules"}`
+Focus: `{"css":"h2:text-is(\"Assignment rules\")"}`
 
 Prepare frame: `{"kind":"goto","path":"/admin/couriers/assignment-rules"}`.
 
@@ -58,7 +58,7 @@ Evidence: controls.
 
 Review rules when shipping methods or courier accounts change. Keep an understandable fallback where supported, and investigate orders with no eligible route. Do not repeatedly submit an unroutable order to make the error disappear.
 
-Focus: `{"role":"heading","name":"Assignment rules"}`
+Focus: `{"css":"h2:text-is(\"Assignment rules\")"}`
 
 Prepare frame: `{"kind":"goto","path":"/admin/couriers/assignment-rules"}`.
 

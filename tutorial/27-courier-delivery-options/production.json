@@ -21,8 +21,7 @@
         }
       ],
       "target": {
-        "role": "heading",
-        "name": "Delivery options"
+        "css": "h2:text-is(\"Delivery options\")"
       },
       "evidence": "controls"
     },
@@ -128,8 +127,7 @@
       "text": "Use a simulated order to verify routing. Do not infer successful booking from the existence of a delivery option.",
       "actions": [],
       "target": {
-        "role": "heading",
-        "name": "Delivery options"
+        "css": "h2:text-is(\"Delivery options\")"
       },
       "evidence": "controls"
     }

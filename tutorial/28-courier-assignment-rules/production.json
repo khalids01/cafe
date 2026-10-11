@@ -21,8 +21,7 @@
         }
       ],
       "target": {
-        "role": "heading",
-        "name": "Assignment rules"
+        "css": "h2:text-is(\"Assignment rules\")"
       },
       "evidence": "controls"
     },
@@ -101,8 +100,7 @@
         }
       ],
       "target": {
-        "role": "heading",
-        "name": "Assignment rules"
+        "css": "h2:text-is(\"Assignment rules\")"
       },
       "evidence": "controls"
     }

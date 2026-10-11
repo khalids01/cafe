@@ -18,8 +18,7 @@
         {
           "kind": "show",
           "target": {
-            "role": "heading",
-            "name": "Courier returns"
+            "css": "h2:text-is(\"Courier returns\")"
           }
         }
       ]

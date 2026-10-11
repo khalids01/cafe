@@ -12,7 +12,7 @@ Capture mode: **walkthrough**. Prepared code only; audio, capture and playback r
 
 A delivery option connects a checkout shipping method to a courier account and service level. Open Delivery options and review the current mappings. Keep customer-facing choices consistent with services that the provider can actually fulfil.
 
-Focus: `{"role":"heading","name":"Delivery options"}`
+Focus: `{"css":"h2:text-is(\"Delivery options\")"}`
 
 Prepare frame: `{"kind":"goto","path":"/admin/couriers/delivery-options"}`.
 
@@ -76,6 +76,6 @@ Evidence: controls.
 
 Use a simulated order to verify routing. Do not infer successful booking from the existence of a delivery option.
 
-Focus: `{"role":"heading","name":"Delivery options"}`
+Focus: `{"css":"h2:text-is(\"Delivery options\")"}`
 
 Evidence: controls.

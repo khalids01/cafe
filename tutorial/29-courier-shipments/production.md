@@ -12,7 +12,7 @@ Capture mode: **walkthrough**. Prepared code only; audio, capture and playback r
 
 Shipments tracks courier submission and parcel progress. Open Shipments and identify the order and dispatch you intend to handle. Check routing and the customer address before creating a provider request.
 
-Focus: `{"role":"heading","name":"Shipments"}`
+Focus: `{"css":"h2:text-is(\"Shipments\")"}`
 
 Prepare frame: `{"kind":"goto","path":"/admin/couriers/shipments"}`.
 
@@ -42,7 +42,7 @@ Evidence: controls.
 
 Investigate failures using their recorded cause. Follow supported retry or review controls rather than making duplicate bookings. This tutorial uses simulator evidence; a local successful example is not proof of a live provider booking.
 
-Focus: `{"role":"heading","name":"Shipments"}`
+Focus: `{"css":"h2:text-is(\"Shipments\")"}`
 
 Prepare frame: `{"kind":"goto","path":"/admin/couriers/shipments"}`.
 

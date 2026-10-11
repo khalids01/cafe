@@ -18,8 +18,7 @@
         {
           "kind": "show",
           "target": {
-            "role": "heading",
-            "name": "Assignment rules"
+            "css": "h2:text-is(\"Assignment rules\")"
           }
         }
       ]
@@ -96,8 +95,7 @@
         {
           "kind": "show",
           "target": {
-            "role": "heading",
-            "name": "Assignment rules"
+            "css": "h2:text-is(\"Assignment rules\")"
           }
         }
       ]

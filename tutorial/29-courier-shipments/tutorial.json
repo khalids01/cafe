@@ -18,8 +18,7 @@
         {
           "kind": "show",
           "target": {
-            "role": "heading",
-            "name": "Shipments"
+            "css": "h2:text-is(\"Shipments\")"
           }
         }
       ]
@@ -70,8 +69,7 @@
         {
           "kind": "show",
           "target": {
-            "role": "heading",
-            "name": "Shipments"
+            "css": "h2:text-is(\"Shipments\")"
           }
         }
       ]

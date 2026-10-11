@@ -13,7 +13,7 @@ Capture mode: **walkthrough**. Prepared code only; audio, capture and playback r
 
 Courier returns track parcels coming back through a provider. Open Returns and review the original order, consignment and return state. A provider return notification does not by itself mean the goods are back in your stock location.
 
-Focus: `{"role":"heading","name":"Courier returns"}`
+Focus: `{"css":"h2:text-is(\"Courier returns\")"}`
 
 Prepare frame: `{"kind":"goto","path":"/admin/couriers/returns"}`.
 
