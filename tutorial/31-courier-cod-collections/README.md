@@ -28,3 +28,18 @@ The capture command expects the existing production app, the correct `BRAND`, is
 Mode: **walkthrough**. Business writes are blocked. Saving, refunding, booking, inviting or other state changes are explained through their controls and pre-existing fictional records. A walkthrough does not claim to prove an unsubmitted operation.
 
 Before production, review `production.md` and `recording-checklist.md`, prepare the required fictional state and check every target against the running app. After generation, watch the entire video with audio and review captions before marking its artifact approved. Source inspection cannot establish runtime accuracy.
+
+## Isolated COD recording fixture
+
+`fixtures.ts prepare|cleanup` creates marker-owned order data and reconciles
+fictional gross collection evidence through the local API. It requires the
+fictional `tutorial-courier-lab` connection from tutorials 26–30, the test database,
+owner session, and disabled courier workers/Polar. Prepared delivery state is set
+locally; it does not book or track a real parcel. Run from the repository root:
+
+```bash
+NODE_ENV=test COURIER_WORKERS_ENABLED=false ENABLE_POLAR=false \
+  bun --env-file=tests/env/.env tutorial/31-courier-cod-collections/fixtures.ts prepare
+```
+
+Use `cleanup` after recording. Existing MP4 files can be uploaded without fixtures.

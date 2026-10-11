@@ -32,7 +32,7 @@
       "text": "Open Activity and choose the relevant filters or period.",
       "actions": [],
       "target": {
-        "css": "button[role=\"combobox\"]:has-text(\"All events\")"
+        "css": "button[data-slot=\"select-trigger\"][class*=\"sm:w-[220px]\"]"
       },
       "evidence": "controls"
     },

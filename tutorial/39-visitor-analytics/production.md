@@ -64,7 +64,7 @@ Evidence: controls.
 
 Inspect the trend chart and breakdowns together. Traffic counts do not prove revenue, successful checkout or delivery. Use order records for those outcomes, and avoid presenting a visitor count as a conversion rate without the correct denominator.
 
-Focus: `{"css":"[data-slot=\"card-title\"]:text-is(\"Visitors Trend\")"}`
+Focus: `{"css":"[data-slot=\"card\"]:has([data-slot=\"card-title\"]:text-is(\"Visitors Trend\"))"}`
 
 Prepare frame: `{"kind":"goto","path":"/admin/visitors"}`.
 

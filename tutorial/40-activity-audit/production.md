@@ -22,7 +22,7 @@ Evidence: controls.
 
 Open Activity and choose the relevant filters or period.
 
-Focus: `{"css":"button[role=\"combobox\"]:has-text(\"All events\")"}`
+Focus: `{"css":"button[data-slot=\"select-trigger\"][class*=\"sm:w-[220px]\"]"}`
 
 Evidence: controls.
 

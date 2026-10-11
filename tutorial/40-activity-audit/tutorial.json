@@ -25,7 +25,7 @@
         {
           "kind": "show",
           "target": {
-            "css": "button[role=\"combobox\"]:has-text(\"All events\")"
+            "css": "button[data-slot=\"select-trigger\"][class*=\"sm:w-[220px]\"]"
           }
         },
         {

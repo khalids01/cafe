@@ -22,7 +22,7 @@ Evidence: controls.
 
 Open Discounts and create a code that your team can recognize.
 
-Focus: `{"role":"button","name":"Discount"}`
+Focus: `{"role":"button","name":"Discount code"}`
 
 Evidence: controls.
 
@@ -40,7 +40,7 @@ Choose percentage or fixed amount and enter its value.
 
 Focus: `{"text":"Type","dialog":"Create discount"}`
 
-Prepare frame: `{"kind":"goto","path":"/admin/discounts"}`; `{"kind":"click","target":{"role":"button","name":"Discount"}}`.
+Prepare frame: `{"kind":"goto","path":"/admin/discounts"}`; `{"kind":"click","target":{"role":"button","name":"Discount code"}}`.
 
 Evidence: controls.
 
@@ -68,7 +68,7 @@ Review active state and save the discount.
 
 Focus: `{"role":"button","name":"Save discount","dialog":"Create discount"}`
 
-Prepare frame: `{"kind":"goto","path":"/admin/discounts"}`; `{"kind":"click","target":{"role":"button","name":"Discount"}}`.
+Prepare frame: `{"kind":"goto","path":"/admin/discounts"}`; `{"kind":"click","target":{"role":"button","name":"Discount code"}}`.
 
 Evidence: controls.
 

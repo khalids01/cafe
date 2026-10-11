@@ -77,7 +77,7 @@
         {
           "kind": "show",
           "target": {
-            "css": "[data-slot=\"card-title\"]:text-is(\"Visitors Trend\")"
+            "css": "[data-slot=\"card\"]:has([data-slot=\"card-title\"]:text-is(\"Visitors Trend\"))"
           }
         }
       ]

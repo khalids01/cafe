@@ -28,3 +28,14 @@ The capture command expects the existing production app, the correct `BRAND`, is
 Mode: **walkthrough**. Business writes are blocked. Saving, refunding, booking, inviting or other state changes are explained through their controls and pre-existing fictional records. A walkthrough does not claim to prove an unsubmitted operation.
 
 Before production, review `production.md` and `recording-checklist.md`, prepare the required fictional state and check every target against the running app. After generation, watch the entire video with audio and review captions before marking its artifact approved. Source inspection cannot establish runtime accuracy.
+
+## Read-only image fixture used for recording
+
+`bun tutorial/34-image-library/file-fixture.ts` serves one fictional image at
+`127.0.0.1:4300`. It supports GET only and never uploads files. Start the isolated
+API with `FILE_SERVER_URL` and `FILE_SERVER_PUBLIC_URL` set to that local origin,
+and `FILE_SERVER_API_KEY=tutorial-local-only`; disable integrations and retain the
+validated test environment. Stop this fixture service after capture. The producer
+blocks browser business writes, so selecting a file demonstrates its preview
+without submitting an upload. This fixture does not establish real file-server
+upload success.

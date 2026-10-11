@@ -18,8 +18,7 @@
         {
           "kind": "show",
           "target": {
-            "role": "heading",
-            "name": "COD collections"
+            "css": "h2:text-is(\"COD collections\")"
           }
         }
       ]

@@ -13,7 +13,7 @@ Capture mode: **walkthrough**. Prepared code only; audio, capture and playback r
 
 COD collection evidence concerns money collected from the customer by the courier. Open COD payouts. Distinguish booked COD, gross customer collection, courier fees and net payout: these values are related but they are not interchangeable.
 
-Focus: `{"role":"heading","name":"COD collections"}`
+Focus: `{"css":"h2:text-is(\"COD collections\")"}`
 
 Prepare frame: `{"kind":"goto","path":"/admin/couriers/cod-payouts"}`.
 

@@ -33,7 +33,7 @@
       "actions": [],
       "target": {
         "role": "button",
-        "name": "Discount"
+        "name": "Discount code"
       },
       "evidence": "controls"
     },
@@ -61,7 +61,7 @@
           "kind": "click",
           "target": {
             "role": "button",
-            "name": "Discount"
+            "name": "Discount code"
           }
         }
       ],
@@ -115,7 +115,7 @@
           "kind": "click",
           "target": {
             "role": "button",
-            "name": "Discount"
+            "name": "Discount code"
           }
         }
       ],
