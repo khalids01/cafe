@@ -11,7 +11,7 @@ Each shop has separate application containers, PostgreSQL, Redis, domains, crede
 3. Push the committed release with `git push origin ecommerce` and wait for **Publish Docker images** to succeed.
 4. Copy `IMAGE_TAG=sha-<full-commit>` from the Actions summary into Dokploy and deploy. For a moving tag, use `IMAGE_TAG=ecommerce`, deploying only after the complete workflow succeeds.
 
-This publishes images automatically on push; pulling and deploying remain a Dokploy action. Do not enable Dokploy's GitHub-push deployment trigger: it can run before the new images exist.
+This publishes images automatically on push. Configure the Dokploy API settings below to trigger deployment after publication. Do not enable Dokploy's GitHub-push deployment trigger: it can run before the new images exist.
 
 ## Files
 
@@ -201,7 +201,7 @@ Then verify sign-in/session behavior, catalog access and a supervised order flow
 
 For a controlled release: push to `ecommerce` (or `main`), wait for Actions to finish, copy its exact SHA tag into Dokploy `IMAGE_TAG`, then deploy.
 
-For a moving release: set `IMAGE_TAG=ecommerce` for this branch (`main` for the main branch), wait for Actions to finish, then deploy. `pull_policy: always` makes Dokploy refresh the tags. Updating the two moving tags is not atomic; deploy only after the entire workflow succeeds. This setup intentionally leaves deployment as a Dokploy action and has no webhook secret or automatic release trigger.
+For a moving release: set `IMAGE_TAG=ecommerce` for this branch (`main` for the main branch), wait for Actions to finish, then deploy. `pull_policy: always` makes Dokploy refresh the tags. Updating the two moving tags is not atomic; deploy only after the entire workflow succeeds. The final workflow step can trigger Dokploy only after both images and moving tags are published.
 
 For rollback: set `IMAGE_TAG` to the previous known-good SHA tag and deploy. Confirm its web build variables match the service environment. Application rollback does not undo database changes; confirm schema compatibility first.
 
@@ -224,3 +224,27 @@ On 2026-10-10, both Dockerfiles were built locally with frozen dependencies (foo
 - [Dokploy Compose domains](https://docs.dokploy.com/docs/core/docker-compose/domains)
 - [GitHub workflow skip instructions](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/skip-workflow-runs)
 - Existing project operations guide: `docs/ecommerce-runtime-operations-v3.md`
+
+## Automated deployment after image publication
+
+Set `IMAGE_TAG=ecommerce` in the Dokploy Compose service. Disable its direct GitHub
+Auto Deploy trigger so it cannot pull old images while CI is still building.
+
+In GitHub Actions repository settings, add:
+
+- Variable `DOKPLOY_URL`: `https://admin.skycanvasstudio.com` (your Dokploy origin).
+- Variable `DOKPLOY_COMPOSE_ID`: the Compose service ID, not its app name or project ID.
+  Find it in the service URL or the `composeId` returned by Dokploy's `project.all` API.
+- Secret `DOKPLOY_API_KEY`: an API token created in Dokploy profile settings with
+  access to deploy this Compose service.
+
+The final step POSTs to `/api/compose.deploy` only for the `ecommerce` branch,
+after successful publication. If none of these settings exist, publication still
+succeeds without triggering deployment; partial configuration fails clearly.
+An accepted API request means deployment was queued, not that the app is healthy.
+Check Dokploy migration and container logs for completion. Do not configure a
+second push webhook or Docker Hub webhook for this Compose service.
+
+Docker installs use the hoisted linker because external workspace source imports
+must resolve shared packages at runtime. No production migration or deployment
+was executed while adding these changes.

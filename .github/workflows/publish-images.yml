@@ -74,3 +74,29 @@ jobs:
           done
           echo "IMAGE_TAG=sha-$GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
           echo "Both images published. Deploy this tag in Dokploy, or use IMAGE_TAG=$GITHUB_REF_NAME." >> "$GITHUB_STEP_SUMMARY"
+      - name: Deploy published ecommerce images in Dokploy
+        if: github.ref == 'refs/heads/ecommerce'
+        env:
+          DOKPLOY_URL: ${{ vars.DOKPLOY_URL }}
+          DOKPLOY_COMPOSE_ID: ${{ vars.DOKPLOY_COMPOSE_ID }}
+          DOKPLOY_API_KEY: ${{ secrets.DOKPLOY_API_KEY }}
+        run: |
+          node --input-type=module <<'JS'
+          const { DOKPLOY_URL: base, DOKPLOY_COMPOSE_ID: composeId, DOKPLOY_API_KEY: key } = process.env;
+          if (!base && !composeId && !key) {
+            console.log('Dokploy deployment is not configured; images published successfully.');
+            process.exit(0);
+          }
+          if (!base || !composeId || !key) throw new Error('Set DOKPLOY_URL, DOKPLOY_COMPOSE_ID and DOKPLOY_API_KEY');
+          const origin = new URL(base);
+          if (origin.protocol !== 'https:' || origin.username || origin.password || origin.search || origin.hash) throw new Error('DOKPLOY_URL must be an HTTPS origin');
+          const response = await fetch(new URL('/api/compose.deploy', origin), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-api-key': key },
+            body: JSON.stringify({ composeId }),
+            signal: AbortSignal.timeout(30000),
+            redirect: 'error',
+          });
+          if (!response.ok) throw new Error(`Dokploy rejected deployment: HTTP ${response.status}`);
+          console.log('Dokploy accepted deployment. Check its deployment logs for migration and application health.');
+          JS

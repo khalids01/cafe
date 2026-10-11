@@ -2,7 +2,8 @@
 FROM oven/bun:1.3.3 AS build
 WORKDIR /app
 COPY . .
-RUN bun install --frozen-lockfile
+# Runtime loads workspace source directly; expose workspace dependencies at root.
+RUN bun install --frozen-lockfile --linker hoisted
 ARG BRAND
 ARG VITE_SERVER_URL
 ARG VITE_ENABLE_POLAR=false

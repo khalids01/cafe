@@ -1,7 +1,8 @@
 FROM oven/bun:1.3.3 AS build
 WORKDIR /app
 COPY . .
-RUN bun install --frozen-lockfile
+# Runtime loads workspace source directly; expose workspace dependencies at root.
+RUN bun install --frozen-lockfile --linker hoisted
 # Generation needs a URL for config parsing, but never connects or migrates.
 RUN DATABASE_URL=postgresql://build:build@localhost:5432/build bun run --cwd packages/db db:generate
 RUN bun run --cwd apps/server build
