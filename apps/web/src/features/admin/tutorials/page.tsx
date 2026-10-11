@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { BookOpen, PlayCircle, Search } from "lucide-react";
+import { BookOpen, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { useSession } from "@/providers/session-provider";
 import { availableTutorials, hasPublishedVideo, type Tutorial } from "./registry";
 import { YoutubeConnection } from "./youtube-connection";
 import { TutorialDialog } from "./tutorial-dialog";
+import { TutorialVideo } from "./tutorial-video";
 
 export function AdminTutorialsPage() {
   const { session } = useSession();
@@ -25,7 +26,8 @@ export function AdminTutorialsPage() {
     {matches.length === 0 ? <div className="rounded-lg border p-8 text-center text-sm text-muted-foreground">No tutorials match. Try another search or category.</div> : <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{matches.map(item => <article key={item.id} className="flex flex-col rounded-lg border bg-card p-5">
       <p className="text-xs font-medium text-muted-foreground">{item.category}</p><h2 className="mt-2 font-semibold">{item.title}</h2><p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
       <p className="mt-4 text-xs text-muted-foreground">{hasPublishedVideo(item) ? `Video · ${Math.ceil(item.media!.durationSec / 60)} min` : "Guide · video coming soon"}</p>
-      <Button type="button" variant="outline" className="mt-3 w-fit" onClick={() => setSelected(item)}>{hasPublishedVideo(item) ? <PlayCircle className="size-4" /> : <BookOpen className="size-4" />}{hasPublishedVideo(item) ? "Watch tutorial" : "Open guide"}</Button>
+      {hasPublishedVideo(item) && item.media && <div className="mt-3"><TutorialVideo media={item.media} title={item.title} /></div>}
+      <Button type="button" variant="outline" className="mt-3 w-fit" onClick={() => setSelected(item)}><BookOpen className="size-4" />Open guide</Button>
     </article>)}</div>}
     <TutorialDialog open={selected !== null} onOpenChange={open => !open && setSelected(null)} topics={selected ? [selected] : []} />
   </div>;
