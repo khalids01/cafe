@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect, useMatch } from "@tanstack/react-router";
 import { RolesListPage } from "@/features/admin/roles/roles-list-page";
 import { canAccessAdminRolesRead } from "@/features/admin/lib/admin-access";
 import { getRootSession } from "@/features/user/lib/get-root-session";
@@ -15,5 +15,10 @@ export const Route = createFileRoute("/admin/roles")({
     }
   },
 
-  component: RolesListPage,
+  component: RolesRoute,
 });
+
+function RolesRoute() {
+  const detail = useMatch({ from: "/admin/roles/$roleId", shouldThrow: false });
+  return detail ? <Outlet /> : <RolesListPage />;
+}
