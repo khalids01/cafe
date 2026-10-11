@@ -1,6 +1,6 @@
 # Tutorial production checklist
 
-43 focused topics plus one retained full workflow. Videos 01–30 are rendered with audio. Upload receipts exist for 01–21; 22–30 await upload. Only 01–02 are published in Guide; 03–30 await full playback review. Tutorials 31–43 remain prepared for future production. See [production instructions](./synchronized-production.readme.md).
+43 focused topics plus one retained full workflow. Videos 01–43 are rendered with audio. Upload receipts exist for 01–21; 22–43 await upload. Only 01–02 are published in Guide; 03–43 await full playback review. See [31–43 completion handoff](./HANDOFF-31-43.md) for the latest media and checks. See [production instructions](./synchronized-production.readme.md).
 
 | Folder | Topic | Capture mode (prepared code) | Audio | Review |
 | --- | --- | --- | --- | --- |
@@ -35,19 +35,19 @@
 | `28-courier-assignment-rules` | Configure and verify courier assignment rules | walkthrough (rendered) | Generated | Pending playback |
 | `29-courier-shipments` | Review shipment booking and parcel handoff | walkthrough (rendered) | Generated | Pending playback |
 | `30-courier-returns` | Track courier returns and recover received goods | walkthrough (rendered) | Generated | Pending playback |
-| `31-courier-cod-collections` | Record courier COD collection evidence | walkthrough | Pending | Pending |
-| `32-store-settings` | Configure store details and checkout defaults | walkthrough | Pending | Pending |
-| `33-store-page-seo` | Save and publish home and about page SEO | walkthrough | Pending | Pending |
-| `34-image-library` | Upload, find and reuse images | walkthrough | Pending | Pending |
-| `35-customer-records` | Review and maintain customer records | walkthrough | Pending | Pending |
-| `36-users-invitations` | Manage users and invitations | walkthrough | Pending | Pending |
-| `37-roles-permissions` | Configure roles and permission boundaries | walkthrough | Pending | Pending |
-| `38-feedback-moderation` | Review and moderate submitted feedback | walkthrough | Pending | Pending |
-| `39-visitor-analytics` | Read visitor trends and filters | walkthrough | Pending | Pending |
-| `40-activity-audit` | Use the activity log to trace admin changes | walkthrough | Pending | Pending |
-| `41-rate-limit-settings` | Review and configure request rate limits | walkthrough | Pending | Pending |
-| `42-webhook-events` | Inspect webhook events and failures | walkthrough | Pending | Pending |
-| `43-discount-codes` | Create and manage discount codes | walkthrough | Pending | Pending |
+| `31-courier-cod-collections` | Record courier COD collection evidence | walkthrough (rendered) | Generated | Pending playback |
+| `32-store-settings` | Configure store details and checkout defaults | walkthrough (rendered) | Generated | Pending playback |
+| `33-store-page-seo` | Save and publish home and about page SEO | walkthrough (rendered) | Generated | Pending playback |
+| `34-image-library` | Upload, find and reuse images | walkthrough (rendered) | Generated | Pending playback |
+| `35-customer-records` | Review and maintain customer records | walkthrough (rendered) | Generated | Pending playback |
+| `36-users-invitations` | Manage users and invitations | walkthrough (rendered) | Generated | Pending playback |
+| `37-roles-permissions` | Configure roles and permission boundaries | walkthrough (rendered) | Generated | Pending playback |
+| `38-feedback-moderation` | Review and moderate submitted feedback | walkthrough (rendered) | Generated | Pending playback |
+| `39-visitor-analytics` | Read visitor trends and filters | walkthrough (rendered) | Generated | Pending playback |
+| `40-activity-audit` | Use the activity log to trace admin changes | walkthrough (rendered) | Generated | Pending playback |
+| `41-rate-limit-settings` | Review and configure request rate limits | walkthrough (rendered) | Generated | Pending playback |
+| `42-webhook-events` | Inspect webhook events and failures | walkthrough (rendered) | Generated | Pending playback |
+| `43-discount-codes` | Create and manage discount codes | walkthrough (rendered) | Generated | Pending playback |
 
 ## Tutorial 02 accepted video
 
