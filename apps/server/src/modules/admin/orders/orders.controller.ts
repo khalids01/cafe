@@ -1,13 +1,10 @@
-import { nicheOperationsService } from "./niche-operations.service";
-import { assignUnit, unassignUnit } from "../../ecommerce/niche/gadgets";
 import { NichePolicyError } from "../../ecommerce/niche/policy";
-import { withOrderTransaction } from "./orders.service";
 import { Elysia } from "elysia";
 import { Permissions } from "@rbac";
 import { authGuard } from "@/guards/auth.guard";
 import { requireAllPermissions } from "@/rbac/guards/permissions.guard";
 import {
-  IdParamDto, UnitParamDto, FoodSlotDto, PreparationDto, AssignUnitDto, OpenWarrantyClaimDto, ResolveWarrantyClaimDto, ClaimParamDto,
+  IdParamDto,
   RecordOrderPaymentDto,
   ReverseOrderPaymentDto,
   PaymentIdParamDto,
@@ -21,7 +18,6 @@ import {
   RestockOrderRecoveryDto,
   UpdateOrderDto,
   UpdateOrderStatusesDto,
-  UpdateOrderTrackingDto,
 } from "./orders.dto";
 import {
   adminOrdersService,
@@ -78,14 +74,6 @@ export const adminOrdersController = new Elysia({
   },
 })
   .use(authGuard)
-  .get("/food-slots", () => nicheOperationsService.listSlots(), { beforeHandle: readOrders })
-  .post("/food-slots", async ({ body, set }) => { try { return await nicheOperationsService.createSlot(body); } catch (e) { return handleOrderError(e, set); } }, { beforeHandle: manageOrders, body: FoodSlotDto })
-  .delete("/food-slots/:id", async ({ params, set }) => { try { return await nicheOperationsService.disableSlot(params.id); } catch (e) { return handleOrderError(e, set); } }, { beforeHandle: manageOrders, params: IdParamDto })
-  .post("/:id/preparation", async ({ params, body, userId, set }) => { try { return await nicheOperationsService.preparation(params.id, body.state, body.note, userId!); } catch (e) { return handleOrderError(e, set); } }, { beforeHandle: fulfillOrders, params: IdParamDto, body: PreparationDto })
-  .post("/:id/units", async ({ params, body, userId, set }) => { try { await withOrderTransaction(tx => assignUnit(tx, params.id, body.lineItemId, body.unitId, userId!)); return { success: true }; } catch (e) { return handleOrderError(e, set); } }, { beforeHandle: restockOrders, params: IdParamDto, body: AssignUnitDto })
-  .delete("/:id/units/:unitId", async ({ params, userId, set }) => { try { await withOrderTransaction(tx => unassignUnit(tx, params.id, params.unitId, userId!)); return { success: true }; } catch (e) { return handleOrderError(e, set); } }, { beforeHandle: restockOrders, params: UnitParamDto })
-  .post("/:id/warranty-claims", async ({ params, body, userId, set }) => { try { return await nicheOperationsService.openClaim(params.id, body, userId!); } catch (e) { return handleOrderError(e, set); } }, { beforeHandle: fulfillOrders, params: IdParamDto, body: OpenWarrantyClaimDto })
-  .patch("/:id/warranty-claims/:claimId", async ({ params, body, userId, set }) => { try { return await nicheOperationsService.resolveClaim(params.id, params.claimId, body.state, body.resolution, userId!); } catch (e) { return handleOrderError(e, set); } }, { beforeHandle: fulfillOrders, params: ClaimParamDto, body: ResolveWarrantyClaimDto })
   .get(
     "/",
     ({ query }) => adminOrdersService.listOrders(query),
@@ -236,25 +224,7 @@ export const adminOrdersController = new Elysia({
       params: IdParamDto,
       body: MarkOrderShippedDto,
       detail: {
-        summary: "Mark order shipped with carrier and tracking number",
-      },
-    },
-  )
-  .patch(
-    "/:id/tracking",
-    async ({ params: { id }, body, set, userId }) => {
-      try {
-        return await orderFulfillmentService.updateTracking(id, body, { userId });
-      } catch (error) {
-        return handleOrderError(error, set);
-      }
-    },
-    {
-      beforeHandle: fulfillOrders,
-      params: IdParamDto,
-      body: UpdateOrderTrackingDto,
-      detail: {
-        summary: "Correct carrier, tracking number, or fulfillment note",
+        summary: "Mark order out for delivery",
       },
     },
   )

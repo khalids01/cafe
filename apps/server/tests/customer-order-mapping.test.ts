@@ -72,28 +72,4 @@ describe("customer order money and private fields", () => {
     ]);
     expect(JSON.stringify(result)).not.toContain("private");
   });
-  test("food booking exposes only the customer's delivery window", () => {
-    const result = mapOrder({
-      ...order,
-      foodBooking: {
-        state: "reserved",
-        capacityUnits: 99,
-        slot: {
-          label: "Morning",
-          startsAt: new Date("2026-10-05"),
-          endsAt: new Date("2026-10-05T03:00Z"),
-          capacityUnits: 999,
-          postalCodes: ["private"],
-        },
-      },
-    });
-    expect(result.foodBooking).toEqual({
-      state: "reserved",
-      slot: {
-        label: "Morning",
-        startsAt: "2026-10-05T00:00:00.000Z",
-        endsAt: "2026-10-05T03:00:00.000Z",
-      },
-    });
-  });
 });

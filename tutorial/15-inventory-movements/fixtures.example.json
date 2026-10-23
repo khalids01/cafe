@@ -1,9 +1,0 @@
-{
-  "marker": "tutorial-inventory-movements",
-  "values": {
-    "sku": "REPLACE_WITH_OWNED_SKU"
-  },
-  "ownershipChecks": [],
-  "outcomeChecks": [],
-  "cleanup": []
-}

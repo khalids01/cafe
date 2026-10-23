@@ -33,10 +33,9 @@ const orderAddressUpsertMock = mock(async (args: any) => args.create);
 const transactionMock = mock(async (callback: any) => callback(prismaMock));
 
 const prismaMock = {
-  foodOrderBooking: { findUnique: mock(async () => null), updateMany: mock(async () => ({ count: 0 })) },
+
   orderLineItem: { findMany: mock(async () => []) },
-  unitAllocation: { updateMany: mock(async () => ({ count: 0 })) },
-  inventoryUnit: { updateMany: mock(async () => ({ count: 0 })) },
+
   $transaction: transactionMock,
   order: {
     count: orderCountMock,
@@ -60,9 +59,7 @@ const prismaMock = {
   inventoryMovement: {
     create: inventoryMovementCreateMock,
   },
-  courierException: { findFirst: mock(async () => null) },
-  courierReturn: { findFirst: mock(async () => null) },
-  courierDispatch: { findFirst: mock(async () => null) },
+
   orderAddress: {
     upsert: orderAddressUpsertMock,
   },
@@ -415,7 +412,6 @@ describe("admin orders service", () => {
   });
 });
 
-
 describe("ledger completion guards", () => {
   it("rejects setting paid manually", async () => {
     const { adminOrdersService } = await import("../src/modules/admin/orders/orders.service");
@@ -437,7 +433,6 @@ describe("ledger completion guards", () => {
   });
 });
 
-
 it("cannot keep completed status while regressing delivery", async () => {
   const { adminOrdersService } = await import("../src/modules/admin/orders/orders.service");
   const row = { ...orderRow({ orderStatus: "completed", deliveryStatus: "delivered", paymentStatus: "paid", inventoryStatus: "committed" }), totalAmount: "1060", payments: [{ id: "receipt-1", entryType: "receipt", amount: "1060", currency: "BDT" }], refunds: [], recovery: null };
@@ -450,4 +445,16 @@ it.each([{ expiryDate: new Date(0), disposition: "sellable" }, { expiryDate: nul
   stockReservationFindManyMock.mockResolvedValueOnce([reservationRow(), reservationRow({ id: "unsafe", batch })]);
   await expect(adminOrdersService.updateOrderStatuses("order-1", { orderStatus: "confirmed" }, { userId: "admin-1" })).rejects.toThrow("Reserved inventory expired");
   expect(inventoryStockUpdateMock).not.toHaveBeenCalled(); expect(stockReservationUpdateMock).not.toHaveBeenCalled();
+});
+
+it.each([
+  { deliveryStatus: "unfulfilled", next: "preparing", inventoryStatus: "reserved", orderStatus: "pending" },
+  { deliveryStatus: "unfulfilled", next: "ready_to_ship", inventoryStatus: "committed", orderStatus: "confirmed" },
+  { deliveryStatus: "ready_to_ship", next: "preparing", inventoryStatus: "committed", orderStatus: "confirmed" },
+  { deliveryStatus: "unfulfilled", next: "preparing", inventoryStatus: "committed", orderStatus: "cancelled" },
+] as const)("rejects skipped or invalid cafe preparation %j", async ({ next, ...state }) => {
+  const { adminOrdersService } = await import("../src/modules/admin/orders/orders.service");
+  orderFindUniqueMock.mockResolvedValueOnce(orderRow(state));
+  await expect(adminOrdersService.updateOrderStatuses("order-1", { deliveryStatus: next }, { userId: "staff" })).rejects.toMatchObject({ status: 409 });
+  expect(orderUpdateMock).not.toHaveBeenCalled();
 });

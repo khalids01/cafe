@@ -1,8 +1,5 @@
 import { NichePolicyError } from "../../ecommerce/niche/policy";
-import { cancelFoodBooking } from "../../ecommerce/niche/food";
-import { markOrderUnits } from "../../ecommerce/niche/gadgets";
 import { batchSellable } from "../../ecommerce/inventory/stock-policy";
-import { ShipmentClaimConflict } from "../../delivery/shipment-claim";
 import { OrderMoneyError, orderMoney, paymentSummary } from "../../ecommerce/orders/payment-accounting";
 import prisma, { type Prisma } from "@db/server";
 import type {
@@ -29,7 +26,7 @@ export async function withOrderTransaction<T>(work: (tx: Prisma.TransactionClien
     return await prisma.$transaction(work, { isolationLevel: "Serializable" });
   } catch (error) {
     if (error instanceof NichePolicyError) throw new AdminOrdersServiceError(error.message, error.status);
-    if (error instanceof OrderMoneyError || error instanceof ShipmentClaimConflict) throw new AdminOrdersServiceError(error.message, 409);
+    if (error instanceof OrderMoneyError) throw new AdminOrdersServiceError(error.message, 409);
     if (typeof error === "object" && error !== null && "code" in error && ["P2034", "P2002"].includes(String(error.code))) {
       throw new AdminOrdersServiceError("Order changed during this operation; reload and try again", 409);
     }
@@ -117,11 +114,8 @@ function orderInclude() {
         image: true,
       },
     },
-    foodBooking: { include: { slot: true } },
     lineItems: {
       include: {
-        units: true,
-        unitAllocations: { include: { unit: true, claims: true } },
         product: {
           select: {
             id: true,
@@ -200,10 +194,6 @@ function mapLineItem(row: any) {
     imageUrl: row.imageUrl,
     attributesSnapshot: row.attributesSnapshot ?? null,
     fulfillmentKind: row.fulfillmentKind ?? "standard",
-    serialTracking: row.serialTracking ?? "none",
-    warrantyDays: row.warrantyDays ?? 0,
-    units: row.units ?? [],
-    unitAllocations: row.unitAllocations ?? [],
     quantity: row.quantity,
     unitPrice: decimalToString(row.unitPrice),
     discountAmount: decimalToString(row.discountAmount),
@@ -303,8 +293,6 @@ function mapOrder(row: any, options: { detail?: boolean } = {}) {
     shippingRateId: row.shippingRateId,
     shippingMethodCode: row.shippingMethodCode,
     shippingMethodLabel: row.shippingMethodLabel,
-    carrier: row.carrier,
-    trackingNumber: row.trackingNumber,
     fulfillmentNote: row.fulfillmentNote,
     shippedAt: toIso(row.shippedAt),
     deliveredAt: toIso(row.deliveredAt),
@@ -313,7 +301,6 @@ function mapOrder(row: any, options: { detail?: boolean } = {}) {
     placedAt: toIso(row.placedAt),
     createdAt: toIso(row.createdAt),
     updatedAt: toIso(row.updatedAt),
-    foodBooking: options.detail ? row.foodBooking ?? null : undefined,
     lineItemCount: row._count?.lineItems ?? row.lineItems?.length ?? 0,
     lineItems: options.detail ? (row.lineItems ?? []).map(mapLineItem) : undefined,
     statusEvents: options.detail
@@ -476,7 +463,6 @@ export async function releaseReservations(
     });
   }
 
-  if (reservations.length > 0) await cancelFoodBooking(tx, input.orderId);
   return reservations.length;
 }
 
@@ -544,8 +530,8 @@ export async function restockCommittedReservations(
     include: { batch: { select: { expiryDate: true, disposition: true } }, location: true },
     orderBy: { createdAt: "asc" },
   });
-  const foodBooking = await tx.foodOrderBooking.findUnique({ where: { orderId: input.orderId } });
-  if (foodBooking?.preparedAt) throw new AdminOrdersServiceError("Prepared food cannot be returned to saleable stock", 409);
+  const prepared = await tx.orderStatusEvent.findFirst({ where: { orderId: input.orderId, type: "delivery", newValue: { in: ["preparing", "ready_to_ship"] } } });
+  if (prepared) throw new AdminOrdersServiceError("Prepared food cannot be returned to saleable stock", 409);
   if (reservations.length === 0) throw new AdminOrdersServiceError("No committed inventory was available to restock", 409);
   if (reservations.some((reservation) => !batchSellable(reservation.batch) || reservation.location?.isActive === false)) {
     throw new AdminOrdersServiceError("Expired, quarantined or inactive-location inventory cannot be returned to saleable stock", 409);
@@ -587,7 +573,6 @@ export async function restockCommittedReservations(
     });
   }
 
-  await markOrderUnits(tx, input.orderId, "available");
   return reservations.length;
 }
 
@@ -695,10 +680,8 @@ export const adminOrdersService = {
       if ((input.orderStatus ?? current.orderStatus) === "completed") {
         const evidenced = await tx.order.findUniqueOrThrow({ where: { id }, include: { payments: true, refunds: true, recovery: true } });
         const money = orderMoney(evidenced);
-        const exception = await tx.courierException.findFirst({ where: { consignment: { orderId: id }, state: "open" } });
-        const pendingReturn = await tx.courierReturn.findFirst({ where: { consignment: { orderId: id }, state: { notIn: ["cancelled"] } } });
         if (current.deliveryStatus !== "delivered" || input.deliveryStatus && input.deliveryStatus !== "delivered"
-          || money.outstanding !== 0n || evidenced.recovery || exception || pendingReturn || current.inventoryStatus !== "committed") {
+          || money.outstanding !== 0n || evidenced.recovery || current.inventoryStatus !== "committed") {
           throw new AdminOrdersServiceError("Complete only delivered, fully collected orders without recovery or reconciliation", 409);
         }
       }
@@ -727,7 +710,7 @@ export const adminOrdersService = {
       if (
         input.deliveryStatus !== undefined &&
         input.deliveryStatus !== current.deliveryStatus &&
-        ["shipped", "delivered"].includes(input.deliveryStatus)
+        ["shipped", "out_for_delivery", "delivered"].includes(input.deliveryStatus)
       ) {
         throw new AdminOrdersServiceError(
           "Use the fulfillment actions to mark an order shipped or delivered",
@@ -739,6 +722,13 @@ export const adminOrdersService = {
         throw new AdminOrdersServiceError("Use physical receipt and inspection to record a returned order", 403);
       }
 
+      if (input.deliveryStatus !== undefined && input.deliveryStatus !== current.deliveryStatus) {
+        const allowed = current.deliveryStatus === "unfulfilled" ? "preparing"
+          : current.deliveryStatus === "preparing" ? "ready_to_ship" : null;
+        if (current.orderStatus === "cancelled" || current.orderStatus === "completed" || current.inventoryStatus !== "committed" || input.deliveryStatus !== allowed) {
+          throw new AdminOrdersServiceError("Accept the order, then move preparation from placed to preparing to ready", 409);
+        }
+      }
       const events: Prisma.OrderStatusEventCreateManyInput[] = [];
       const data: Prisma.OrderUpdateInput = {};
 
@@ -804,12 +794,6 @@ export const adminOrdersService = {
         throw new AdminOrdersServiceError("Order not found", 404);
       }
 
-      if (input.customerName !== undefined || input.customerPhone !== undefined || input.customerNotes !== undefined || input.addresses?.length) {
-        const booking = await tx.courierDispatch.findFirst({ where: { orderId: id, status: { in: ["confirmed", "queued", "processing", "submitted"] } } });
-        if (booking) throw new AdminOrdersServiceError("Shipping details are frozen by courier review; reconcile or cancel that review first", 409);
-      }
-      const foodBooking = input.addresses?.length ? await tx.foodOrderBooking.findUnique({ where: { orderId: id } }) : null;
-      if (foodBooking) throw new AdminOrdersServiceError("Fresh-food delivery area is frozen; cancel and place a corrected order", 409);
       const data: Prisma.OrderUpdateInput = {};
       if (input.customerName !== undefined) {
         data.customerName = input.customerName.trim();
@@ -905,7 +889,6 @@ export const adminOrdersService = {
         });
       }
 
-      for (const orderId of orderIds) await cancelFoodBooking(tx, orderId);
       if (orderIds.size > 0) {
         await tx.order.updateMany({
           where: {

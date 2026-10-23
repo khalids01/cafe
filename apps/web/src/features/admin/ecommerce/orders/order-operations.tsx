@@ -52,7 +52,6 @@ export function OrderOperationsCard(props: {
   const invalidateOrders = () => Promise.all([
     queryClient.invalidateQueries({ queryKey: queryKeys.admin.ecommerce.orders.all() }),
     queryClient.invalidateQueries({ queryKey: queryKeys.admin.ecommerce.inventory.all() }),
-    queryClient.invalidateQueries({ queryKey: queryKeys.admin.ecommerce.delivery.all() }),
   ]);
 
   const cancelOrder = useMutation({
@@ -205,9 +204,8 @@ export function OrderOperationsCard(props: {
           <DialogHeader>
             <DialogTitle>Cancel order?</DialogTitle>
             <DialogDescription>
-              Unattempted dispatches are stopped. Stock already sent to a courier,
-              or with an uncertain booking, stays unavailable until physical recovery
-              and inspection. Cancellation does not cancel a parcel in the courier portal.
+              Food already prepared or handed over for delivery stays unavailable until physical recovery
+              and inspection. Coordinate delivery cancellations outside this app.
             </DialogDescription>
           </DialogHeader>
           {cancelDraft ? (

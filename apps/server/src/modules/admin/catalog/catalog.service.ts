@@ -154,8 +154,6 @@ function mapCategory(row: any) {
     imageUrl: row.imageUrl,
     iconUrl: row.iconUrl,
     fulfillmentKind: row.fulfillmentKind ?? "standard",
-    serialTracking: row.serialTracking ?? "none",
-    warrantyDays: row.warrantyDays ?? 0,
     brandPolicy: row.brandPolicy,
     showStoreBrand: row.showStoreBrand,
     isActive: row.isActive,
@@ -408,9 +406,9 @@ export class AdminCatalogService {
     }
 
     const data: Prisma.CategoryUpdateInput = {};
-    if (input.fulfillmentKind !== undefined || input.serialTracking !== undefined || input.warrantyDays !== undefined) {
+    if (input.fulfillmentKind !== undefined) {
       const existing = await prisma.category.findUnique({ where: { id } });
-      try { Object.assign(data, categoryPolicy({ fulfillmentKind: existing!.fulfillmentKind, serialTracking: existing!.serialTracking, warrantyDays: existing!.warrantyDays, ...input })); } catch (e) { if (e instanceof NichePolicyError) throw new CatalogServiceError(e.message, e.status); throw e; }
+      try { Object.assign(data, categoryPolicy({ fulfillmentKind: existing!.fulfillmentKind, ...input })); } catch (e) { if (e instanceof NichePolicyError) throw new CatalogServiceError(e.message, e.status); throw e; }
     }
 
     if (input.name !== undefined) {

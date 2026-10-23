@@ -1,6 +1,3 @@
-import { polar, checkout, portal, webhooks } from "@polar-sh/better-auth";
-import type { WebhookSubscriptionCreatedPayload } from "@polar-sh/sdk/models/components/webhooksubscriptioncreatedpayload";
-import type { WebhookSubscriptionUpdatedPayload } from "@polar-sh/sdk/models/components/webhooksubscriptionupdatedpayload";
 import { magicLink, twoFactor } from "better-auth/plugins";
 import prisma from "../../db/src/client.server";
 import { getUserSessionCacheVersion } from "../../db/src/session-revocation.server";
@@ -18,14 +15,6 @@ import {
 import { authAvailability } from "./lib/auth-availability.server";
 import { defaultUserRoleOnSignup } from "./lib/default-user-role.server";
 import { recordAuthMethodOnSession } from "./lib/record-auth-method.server";
-import { polarClient } from "./lib/payments.server";
-import { polarCustomersForBillingUsers } from "./lib/polar-customers.server";
-
-function getUserIdFromPolarSubscription(
-  subscription: WebhookSubscriptionCreatedPayload["data"],
-): string | null {
-  return subscription.customer.externalId;
-}
 
 export const authOptions = {
   database: prismaAdapter(prisma, {
@@ -132,90 +121,9 @@ export const authOptions = {
         input: false,
         returned: true,
       },
-      onboardingComplete: {
-        type: "boolean",
-        input: true,
-        returned: true,
-      },
-      polarCustomerId: {
-        type: "string",
-        input: false,
-        returned: false,
-      },
-      subscriptionId: {
-        type: "string",
-        input: false,
-        returned: false,
-      },
-      plan: {
-        type: "string",
-        input: false,
-        returned: true,
-      },
-      subscriptionStatus: {
-        type: "string",
-        input: false,
-        returned: true,
-      },
     },
   },
   plugins: [
-    ...(env.ENABLE_POLAR
-      ? [
-          polar({
-            client: polarClient,
-            createCustomerOnSignUp: false,
-            use: [
-              checkout({
-                products: [
-                  {
-                    productId: "c9fe3a9c-1663-48ec-b7c5-75fdc6be91ca",
-                    slug: "pro_monthly",
-                  },
-                ],
-                successUrl: env.POLAR_SUCCESS_URL!,
-                authenticatedUsersOnly: true,
-              }),
-              portal(),
-              webhooks({
-                secret: env.POLAR_WEBHOOK_SECRET!,
-                onSubscriptionCreated: async (
-                  payload: WebhookSubscriptionCreatedPayload,
-                ) => {
-                  const userId = getUserIdFromPolarSubscription(payload.data);
-                  if (!userId) {
-                    return;
-                  }
-
-                  await prisma.user.update({
-                    where: { id: userId },
-                    data: {
-                      subscriptionId: payload.data.id,
-                      subscriptionStatus: payload.data.status,
-                    },
-                  });
-                },
-                onSubscriptionUpdated: async (
-                  payload: WebhookSubscriptionUpdatedPayload,
-                ) => {
-                  const userId = getUserIdFromPolarSubscription(payload.data);
-                  if (!userId) {
-                    return;
-                  }
-
-                  await prisma.user.update({
-                    where: { id: userId },
-                    data: {
-                      subscriptionStatus: payload.data.status,
-                    },
-                  });
-                },
-              }),
-            ],
-          }),
-          polarCustomersForBillingUsers(),
-        ]
-      : []),
     magicLink({
       rateLimit: {
         window: 60,

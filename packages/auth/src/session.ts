@@ -8,9 +8,6 @@ export type AuthClientSessionUser = {
   banned: boolean;
   banReason: string | null;
   archived: boolean;
-  onboardingComplete: boolean;
-  plan: string | null;
-  subscriptionStatus: string | null;
   twoFactorEnabled?: boolean | null;
 };
 
@@ -34,7 +31,7 @@ export type AuthClientSession = {
 
 export type ClientSessionUser = Pick<
   AuthClientSessionUser,
-  "id" | "name" | "email" | "image" | "onboardingComplete" | "plan" | "subscriptionStatus" | "twoFactorEnabled"
+  "id" | "name" | "email" | "image" | "twoFactorEnabled"
 >;
 
 export type ClientSession = {
@@ -65,9 +62,6 @@ export function toClientSession(
       name: session.user.name,
       email: session.user.email,
       image: session.user.image ?? null,
-      onboardingComplete: session.user.onboardingComplete,
-      plan: session.user.plan ?? null,
-      subscriptionStatus: session.user.subscriptionStatus ?? null,
       twoFactorEnabled: Boolean(session.user.twoFactorEnabled),
     },
     permissions: session.permissions,

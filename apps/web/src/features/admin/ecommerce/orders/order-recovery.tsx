@@ -31,7 +31,7 @@ export function OrderRecoveryCard({ order, canReceive, canRestock }: { order: Or
     onSuccess: () => {
       toast.success(action === "restock" ? "Inspected inventory restocked" : action === "inspect" ? "Inspection recorded; stock unchanged" : "Physical receipt recorded; stock unchanged");
       setAction(null);
-      for (const queryKey of [queryKeys.admin.ecommerce.orders.all(), queryKeys.admin.ecommerce.inventory.all(), queryKeys.admin.ecommerce.delivery.all()]) {
+      for (const queryKey of [queryKeys.admin.ecommerce.orders.all(), queryKeys.admin.ecommerce.inventory.all()]) {
         void queryClient.invalidateQueries({ queryKey });
       }
     },
@@ -45,7 +45,7 @@ export function OrderRecoveryCard({ order, canReceive, canRestock }: { order: Or
     <section className="space-y-4 rounded-lg border p-4 sm:p-5">
       <div>
         <h2 className="font-medium">Physical inventory recovery</h2>
-        <p className="mt-1 text-xs text-muted-foreground">Courier return completion and refunds do not return goods to saleable stock. Record receipt, inspect condition, then restock explicitly.</p>
+        <p className="mt-1 text-xs text-muted-foreground">Refunds do not return food to saleable stock. Record receipt, inspect condition, then restock explicitly.</p>
       </div>
       {recovery ? (
         <div className="space-y-2 text-sm">

@@ -81,6 +81,6 @@ export function sitemapXml(urls: string[]) {
 
 export function robotsText(origin: string | undefined, indexable: boolean) {
   if (!indexable || !absoluteSeoUrl("/", origin)) return "User-agent: *\nDisallow: /\n";
-  const paths = ["/admin", "/dashboard", "/account", "/settings", "/billing", "/login", "/signup", "/forgot-password", "/reset-password", "/two-factor", "/auth-complete", "/cart", "/checkout", "/saved", "/track-order", "/payment", "/onboarding", "/accept-invitation"];
+  const paths = ["/admin", "/dashboard", "/account", "/settings", "/login", "/signup", "/forgot-password", "/reset-password", "/two-factor", "/auth-complete", "/cart", "/checkout", "/saved", "/track-order", "/payment", "/accept-invitation"];
   return `User-agent: *\n${paths.map((path) => `Disallow: ${path}`).join("\n")}\nSitemap: ${absoluteSeoUrl("/sitemap.xml", origin)}\n`;
 }

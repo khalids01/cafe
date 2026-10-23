@@ -1,6 +1,8 @@
-# ts-starter
+# Cafe ordering
 
 This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines React, TanStack Start, Elysia, and more.
+
+The app supports customer ordering and admin menu/order handling, with COD today and payment records ready for online payments later. Delivery is handled externally. See [current scope](docs/cafe-scope.md).
 
 ## Features
 

@@ -6,11 +6,9 @@ COPY . .
 RUN bun install --frozen-lockfile --linker hoisted
 ARG BRAND
 ARG VITE_SERVER_URL
-ARG VITE_ENABLE_POLAR=false
 ARG AUTH_SESSION_COOKIE_NAME=better-auth.session_token
 RUN test -n "$BRAND" && test -n "$VITE_SERVER_URL"
 ENV BRAND=$BRAND VITE_SERVER_URL=$VITE_SERVER_URL \
-    VITE_ENABLE_POLAR=$VITE_ENABLE_POLAR \
     AUTH_SESSION_COOKIE_NAME=$AUTH_SESSION_COOKIE_NAME
 RUN bun run --cwd apps/web build
 

@@ -1,5 +1,5 @@
 import prisma from "@db/server";
-import { Roles, type RoleSlug } from "@rbac";
+import { type RoleSlug } from "@rbac";
 import { assignUserRoleAndInvalidate } from "@/rbac/assignments";
 
 type InvitationErrorCode =
@@ -72,10 +72,6 @@ function invitationNotPending(status: string): InvitationError {
   };
 }
 
-function skipsOnboardingForRole(slug: RoleSlug) {
-  return slug === Roles.PlatformAdmin || slug === Roles.PlatformOwner;
-}
-
 export class InvitationsService {
   async getInvitationById(id: string): Promise<InvitationForView | InvitationError> {
     const invitation = await prisma.invitation.findUnique({
@@ -143,7 +139,6 @@ export class InvitationsService {
     }
 
     const invitedRoleSlug = invitationLookup.role.slug as RoleSlug;
-    const skipOnboarding = skipsOnboardingForRole(invitedRoleSlug);
 
     const result = await prisma.$transaction(async (tx) => {
       const updatedInvitation = await tx.invitation.updateMany({
@@ -160,17 +155,7 @@ export class InvitationsService {
         return null;
       }
 
-      const updatedUser = await tx.user.update({
-        where: { id: args.userId },
-        data: skipOnboarding ? { onboardingComplete: true } : {},
-        select: { onboardingComplete: true },
-      });
-
-      return {
-        redirectTo: updatedUser.onboardingComplete
-          ? "/dashboard"
-          : "/onboarding",
-      } as const;
+      return { redirectTo: "/dashboard" } as const;
     });
 
     if (!result) {

@@ -1,308 +1,102 @@
-import { afterEach, beforeEach, describe, expect, it, mock } from "bun:test";
-
-const orderFindUniqueMock = mock(async () => orderRow());
-const orderUpdateMock = mock(async (args: any) =>
-  orderRow({ ...args.data, id: args.where.id }),
-);
-const statusEventCreateMock = mock(async (args: any) => ({
-  id: "event-1",
-  ...args.data,
-}));
-const transactionMock = mock(async (callback: any) => callback(prismaMock));
-
-const prismaMock = {
-  foodOrderBooking: { findUnique: mock(async () => null), updateMany: mock(async () => ({ count: 0 })) },
-  orderLineItem: { findMany: mock(async () => []) },
-  unitAllocation: { updateMany: mock(async () => ({ count: 0 })) },
-  inventoryUnit: { updateMany: mock(async () => ({ count: 0 })) },
-  $transaction: transactionMock,
-  courierShipmentClaim: { findUnique: mock(async () => null) },
-  courierConsignment: { findFirst: mock(async () => null) },
-  stockReservation: { findFirst: mock(async () => null) },
+import { beforeEach, describe, expect, it, mock } from "bun:test";
+let order: any;
+let events: any[];
+const db: any = {
   order: {
-    findUnique: orderFindUniqueMock,
-    update: orderUpdateMock,
+    findUnique: mock(async () => ({ ...order })),
+    update: mock(async ({ data }: any) => Object.assign(order, data)),
   },
+  stockReservation: { findFirst: mock(async () => null) },
   orderStatusEvent: {
-    create: statusEventCreateMock,
+    create: mock(async ({ data }: any) => {
+      events.push(data);
+      return data;
+    }),
   },
 };
-
-mock.module("@db/server", () => ({
-  default: prismaMock,
-}));
-
-function orderRow(overrides: Record<string, any> = {}) {
-  return {
-    id: overrides.id ?? "order-1",
-    orderStatus: overrides.orderStatus ?? "confirmed",
-    deliveryStatus: overrides.deliveryStatus ?? "unfulfilled",
-    inventoryStatus: overrides.inventoryStatus ?? "committed",
-    carrier: overrides.carrier ?? null,
-    trackingNumber: overrides.trackingNumber ?? null,
-    fulfillmentNote: overrides.fulfillmentNote ?? null,
-    shippedAt: overrides.shippedAt ?? null,
-    deliveredAt: overrides.deliveredAt ?? null,
-  };
-}
-
+db.$transaction = mock(async (work: any) => work(db));
+mock.module("@db/server", () => ({ default: db }));
+const { orderFulfillmentService } =
+  await import("../src/modules/admin/orders/fulfillment.service");
 beforeEach(() => {
-  orderFindUniqueMock.mockResolvedValue(orderRow());
+  events = [];
+  order = {
+    id: "order-1",
+    orderStatus: "confirmed",
+    inventoryStatus: "committed",
+    deliveryStatus: "ready_to_ship",
+    shippedAt: null,
+    deliveredAt: null,
+    paymentStatus: "unpaid",
+  };
+  db.stockReservation.findFirst.mockReset();
+  db.stockReservation.findFirst.mockResolvedValue(null);
 });
-
-afterEach(() => {
-  for (const fn of [orderFindUniqueMock, orderUpdateMock, statusEventCreateMock, transactionMock]) {
-    fn.mockClear();
-  }
-});
-
-describe("order fulfillment service", () => {
-  it("marks a committed order shipped and records an audit event", async () => {
-    const { orderFulfillmentService } = await import(
-      "../src/modules/admin/orders/fulfillment.service"
-    );
-
+describe("manual cafe delivery", () => {
+  it("hands a ready order over without carrier credentials or tracking", async () => {
     const result = await orderFulfillmentService.markShipped(
-      "order-1",
-      { carrier: " Pathao ", trackingNumber: " P-123 ", note: " Handed over " },
-      { userId: "admin-1" },
+      order.id,
+      { note: " Collected by delivery team " },
+      { userId: "staff" },
     );
-
-    expect(orderUpdateMock).toHaveBeenCalledWith({
-      where: { id: "order-1" },
-      data: expect.objectContaining({
-        carrier: "Pathao",
-        trackingNumber: "P-123",
-        fulfillmentNote: "Handed over",
-        deliveryStatus: "shipped",
-        shippedAt: expect.any(Date),
-      }),
-    });
-    expect(statusEventCreateMock).toHaveBeenCalledWith({
-      data: expect.objectContaining({
-        orderId: "order-1",
-        type: "delivery",
-        previousValue: "unfulfilled",
-        newValue: "shipped",
-        note: "Handed over",
-        actorUserId: "admin-1",
-        metadata: {
-          action: "mark_shipped",
-          carrier: "Pathao",
-          trackingNumber: "P-123",
-        },
-      }),
-    });
-    expect(result).toMatchObject({
-      id: "order-1",
-      deliveryStatus: "shipped",
-      carrier: "Pathao",
-      trackingNumber: "P-123",
-      deliveredAt: null,
+    expect(result.deliveryStatus).toBe("out_for_delivery");
+    expect(result.shippedAt).toBeString();
+    expect(order.paymentStatus).toBe("unpaid");
+    expect(events[0]).toMatchObject({
+      type: "delivery",
+      previousValue: "ready_to_ship",
+      newValue: "out_for_delivery",
+      actorUserId: "staff",
+      note: "Collected by delivery team",
     });
   });
-
-  it("rejects shipping when stock is not committed", async () => {
-    orderFindUniqueMock.mockResolvedValueOnce(orderRow({ inventoryStatus: "reserved" }));
-    const { orderFulfillmentService } = await import(
-      "../src/modules/admin/orders/fulfillment.service"
-    );
-
+  it.each(["unfulfilled", "preparing", "delivered"])(
+    "rejects handover from %s",
+    async (status) => {
+      order.deliveryStatus = status;
+      await expect(
+        orderFulfillmentService.markShipped(order.id, {}, { userId: "staff" }),
+      ).rejects.toThrow("Mark the order ready");
+      expect(events).toHaveLength(0);
+    },
+  );
+  it("rejects unavailable inventory", async () => {
+    db.stockReservation.findFirst.mockResolvedValue({ id: "unsafe" });
     await expect(
-      orderFulfillmentService.markShipped(
-        "order-1",
-        { carrier: "Pathao", trackingNumber: "P-123" },
-        { userId: "admin-1" },
-      ),
-    ).rejects.toThrow("Confirm the order and commit its stock before shipping");
+      orderFulfillmentService.markShipped(order.id, {}, { userId: "staff" }),
+    ).rejects.toThrow("Inventory expired");
   });
-
-  it("rejects shipping a cancelled order", async () => {
-    orderFindUniqueMock.mockResolvedValueOnce(
-      orderRow({ orderStatus: "cancelled" }),
-    );
-    const { orderFulfillmentService } = await import(
-      "../src/modules/admin/orders/fulfillment.service"
-    );
-
+  it("rejects handover before the order is accepted", async () => {
+    order.inventoryStatus = "reserved";
     await expect(
-      orderFulfillmentService.markShipped(
-        "order-1",
-        { carrier: "Pathao", trackingNumber: "P-123" },
-        { userId: "admin-1" },
-      ),
-    ).rejects.toThrow("A cancelled order cannot be shipped");
+      orderFulfillmentService.markShipped(order.id, {}, {}),
+    ).rejects.toThrow("Confirm the order");
   });
-
-  it("rejects shipping an order that is already shipped", async () => {
-    orderFindUniqueMock.mockResolvedValueOnce(
-      orderRow({ deliveryStatus: "shipped", shippedAt: new Date() }),
+  it("records delivery without inventing a COD payment", async () => {
+    await orderFulfillmentService.markShipped(
+      order.id,
+      {},
+      { userId: "staff" },
     );
-    const { orderFulfillmentService } = await import(
-      "../src/modules/admin/orders/fulfillment.service"
-    );
-
-    await expect(
-      orderFulfillmentService.markShipped(
-        "order-1",
-        { carrier: "Pathao", trackingNumber: "P-123" },
-        { userId: "admin-1" },
-      ),
-    ).rejects.toThrow("Order is not eligible to be shipped");
-  });
-
-  it("rejects whitespace-only shipment details after normalization", async () => {
-    const { orderFulfillmentService } = await import(
-      "../src/modules/admin/orders/fulfillment.service"
-    );
-
-    await expect(
-      orderFulfillmentService.markShipped(
-        "order-1",
-        { carrier: "   ", trackingNumber: "P-123" },
-        { userId: "admin-1" },
-      ),
-    ).rejects.toThrow("Carrier is required");
-  });
-
-  it("audits previous tracking values when correcting tracking", async () => {
-    orderFindUniqueMock.mockResolvedValueOnce(
-      orderRow({
-        deliveryStatus: "shipped",
-        carrier: "Old carrier",
-        trackingNumber: "OLD-1",
-        fulfillmentNote: "Old note",
-        shippedAt: new Date("2026-06-16T09:00:00.000Z"),
-      }),
-    );
-    const { orderFulfillmentService } = await import(
-      "../src/modules/admin/orders/fulfillment.service"
-    );
-
-    const result = await orderFulfillmentService.updateTracking(
-      "order-1",
-      { trackingNumber: " NEW-2 " },
-      { userId: "admin-1" },
-    );
-
-    expect(orderUpdateMock).toHaveBeenCalledWith({
-      where: { id: "order-1" },
-      data: {
-        carrier: "Old carrier",
-        trackingNumber: "NEW-2",
-        fulfillmentNote: "Old note",
-      },
-    });
-    expect(statusEventCreateMock).toHaveBeenCalledWith({
-      data: expect.objectContaining({
-        orderId: "order-1",
-        type: "delivery",
-        previousValue: "shipped",
-        newValue: "shipped",
-        metadata: {
-          action: "tracking_updated",
-          previous: { carrier: "Old carrier", trackingNumber: "OLD-1" },
-          current: { carrier: "Old carrier", trackingNumber: "NEW-2" },
-        },
-      }),
-    });
-    expect(result.trackingNumber).toBe("NEW-2");
-  });
-
-  it("rejects tracking updates before shipment", async () => {
-    const { orderFulfillmentService } = await import(
-      "../src/modules/admin/orders/fulfillment.service"
-    );
-
-    await expect(
-      orderFulfillmentService.updateTracking(
-        "order-1",
-        { trackingNumber: "NEW-2" },
-        { userId: "admin-1" },
-      ),
-    ).rejects.toThrow("Tracking can only be updated after shipment");
-  });
-
-  it("rejects tracking updates without any field", async () => {
-    const { orderFulfillmentService } = await import(
-      "../src/modules/admin/orders/fulfillment.service"
-    );
-
-    await expect(
-      orderFulfillmentService.updateTracking("order-1", {}, { userId: "admin-1" }),
-    ).rejects.toThrow("At least one tracking field is required");
-  });
-
-  it("rejects whitespace-only tracking corrections", async () => {
-    orderFindUniqueMock.mockResolvedValueOnce(
-      orderRow({
-        deliveryStatus: "shipped",
-        carrier: "Pathao",
-        trackingNumber: "OLD-1",
-        shippedAt: new Date("2026-06-16T09:00:00.000Z"),
-      }),
-    );
-    const { orderFulfillmentService } = await import(
-      "../src/modules/admin/orders/fulfillment.service"
-    );
-
-    await expect(
-      orderFulfillmentService.updateTracking(
-        "order-1",
-        { trackingNumber: "   " },
-        { userId: "admin-1" },
-      ),
-    ).rejects.toThrow("Tracking number is required");
-  });
-
-  it("marks a shipped order delivered and records the timestamp", async () => {
-    orderFindUniqueMock.mockResolvedValueOnce(
-      orderRow({ deliveryStatus: "shipped", shippedAt: new Date("2026-06-16T09:00:00.000Z") }),
-    );
-    const { orderFulfillmentService } = await import(
-      "../src/modules/admin/orders/fulfillment.service"
-    );
-
     const result = await orderFulfillmentService.markDelivered(
-      "order-1",
+      order.id,
       { note: "Received by customer" },
-      { userId: "admin-1" },
+      { userId: "staff" },
     );
-
-    expect(orderUpdateMock).toHaveBeenCalledWith({
-      where: { id: "order-1" },
-      data: {
-        deliveryStatus: "delivered",
-        deliveredAt: expect.any(Date),
-      },
-    });
-    expect(statusEventCreateMock).toHaveBeenCalledWith({
-      data: expect.objectContaining({
-        orderId: "order-1",
-        type: "delivery",
-        previousValue: "shipped",
-        newValue: "delivered",
-        note: "Received by customer",
-        actorUserId: "admin-1",
-      }),
-    });
     expect(result.deliveryStatus).toBe("delivered");
+    expect(result.deliveredAt).toBeString();
+    expect(order.paymentStatus).toBe("unpaid");
   });
-
-  it("rejects marking an unshipped order delivered", async () => {
-    const { orderFulfillmentService } = await import(
-      "../src/modules/admin/orders/fulfillment.service"
-    );
-
+  it("rejects delivery before handover and after cancellation", async () => {
     await expect(
-      orderFulfillmentService.markDelivered("order-1", {}, { userId: "admin-1" }),
-    ).rejects.toThrow("Only a shipped order can be marked delivered");
+      orderFulfillmentService.markDelivered(order.id, {}, {}),
+    ).rejects.toThrow("Only a shipped order");
+    order.orderStatus = "cancelled";
+    await expect(
+      orderFulfillmentService.markShipped(order.id, {}, {}),
+    ).rejects.toThrow("cancelled order");
+    await expect(
+      orderFulfillmentService.markDelivered(order.id, {}, {}),
+    ).rejects.toThrow("cancelled order");
   });
-});
-
-it("manual fulfillment cannot override a courier-managed shipment", async () => {
-  const { orderFulfillmentService } = await import("../src/modules/admin/orders/fulfillment.service");
-  prismaMock.courierShipmentClaim.findUnique.mockResolvedValueOnce({ dispatchId: "dispatch" });
-  await expect(orderFulfillmentService.markShipped("order-1", { carrier: "Local", trackingNumber: "Record" }, { userId: "actor" })).rejects.toThrow("Courier-managed");
-  expect(orderUpdateMock).not.toHaveBeenCalled(); expect(statusEventCreateMock).not.toHaveBeenCalled();
 });

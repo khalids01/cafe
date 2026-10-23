@@ -20,6 +20,7 @@ const getEffectivePermissionsMock = mock(async () =>
 );
 
 mock.module("@auth/server", () => ({
+  getSetCookieHeaders: () => [],
   auth: {
     api: {
       getSession: getSessionMock,

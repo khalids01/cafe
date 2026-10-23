@@ -19,7 +19,7 @@ const prismaMock = {
     delete: deleteMock,
     updateMany: updateManyMock,
   },
-  courierServiceMethod: { count: mappingCountMock },
+
   order: { count: orderCountMock },
   activityEvent: { create: mock(async ({ data }: any) => data) },
 };

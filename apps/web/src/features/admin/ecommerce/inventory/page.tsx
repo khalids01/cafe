@@ -1,4 +1,3 @@
-import { UnitRegistration } from "./unit-registration";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
@@ -130,7 +129,6 @@ export function AdminInventoryPage() {
 
         <TabsContent value="stock">
           {stocksQuery.isError ? <p role="alert">{readError(stocksQuery.error, "Failed to load inventory")}</p> : null}
-          {canManageInventory ? <UnitRegistration stocks={stocksQuery.data?.items ?? []} onSaved={invalidateInventory} /> : null}
           <StockTable stocks={stocksQuery.data?.items ?? []} loading={stocksQuery.isLoading} canManage={canManageInventory} onSaved={invalidateInventory} />
         </TabsContent>
         <TabsContent value="receive">

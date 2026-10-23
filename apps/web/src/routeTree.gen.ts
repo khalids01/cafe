@@ -14,7 +14,6 @@ import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AcceptInvitationRouteImport } from './routes/accept-invitation'
 import { Route as AdminRouteImport } from './routes/admin'
-import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AuthAuthCompleteRouteImport } from './routes/_auth/auth-complete'
@@ -24,7 +23,6 @@ import { Route as AuthResetPasswordRouteImport } from './routes/_auth/reset-pass
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthTwoFactorRouteImport } from './routes/_auth/two-factor'
 import { Route as ProtectedAccountRouteImport } from './routes/_protected/account'
-import { Route as ProtectedBillingRouteImport } from './routes/_protected/billing'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as ProtectedSettingsRouteImport } from './routes/_protected/settings'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
@@ -42,11 +40,9 @@ import { Route as PublicTrackOrderRouteImport } from './routes/_public/track-ord
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminActivityRouteImport } from './routes/admin/activity'
 import { Route as AdminCatalogRouteImport } from './routes/admin/catalog'
-import { Route as AdminCouriersRouteImport } from './routes/admin/couriers'
 import { Route as AdminCustomersRouteImport } from './routes/admin/customers'
 import { Route as AdminDiscountsRouteImport } from './routes/admin/discounts'
 import { Route as AdminFeedbackRouteImport } from './routes/admin/feedback'
-import { Route as AdminGuideRouteImport } from './routes/admin/guide'
 import { Route as AdminImagesRouteImport } from './routes/admin/images'
 import { Route as AdminInventoryRouteImport } from './routes/admin/inventory'
 import { Route as AdminOrdersRouteImport } from './routes/admin/orders'
@@ -56,22 +52,13 @@ import { Route as AdminRateLimitsRouteImport } from './routes/admin/rate-limits'
 import { Route as AdminRolesRouteImport } from './routes/admin/roles'
 import { Route as AdminShippingRouteImport } from './routes/admin/shipping'
 import { Route as AdminStoreSettingsRouteImport } from './routes/admin/store-settings'
-import { Route as AdminTutorialsRouteImport } from './routes/admin/tutorials'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminVisitorsRouteImport } from './routes/admin/visitors'
 import { Route as AdminWebhooksRouteImport } from './routes/admin/webhooks'
-import { Route as PaymentSuccessRouteImport } from './routes/payment/success'
 import { Route as ProtectedOrdersIndexRouteImport } from './routes/_protected/orders/index'
 import { Route as ProtectedOrdersOrderNumberRouteImport } from './routes/_protected/orders/$orderNumber'
 import { Route as PublicCheckoutIndexRouteImport } from './routes/_public/checkout/index'
 import { Route as PublicShopIndexRouteImport } from './routes/_public/shop/index'
-import { Route as AdminCouriersIndexRouteImport } from './routes/admin/couriers/index'
-import { Route as AdminCouriersAssignmentRulesRouteImport } from './routes/admin/couriers/assignment-rules'
-import { Route as AdminCouriersCodPayoutsRouteImport } from './routes/admin/couriers/cod-payouts'
-import { Route as AdminCouriersConnectionsRouteImport } from './routes/admin/couriers/connections'
-import { Route as AdminCouriersDeliveryOptionsRouteImport } from './routes/admin/couriers/delivery-options'
-import { Route as AdminCouriersReturnsRouteImport } from './routes/admin/couriers/returns'
-import { Route as AdminCouriersShipmentsRouteImport } from './routes/admin/couriers/shipments'
 import { Route as AdminCustomersIndexRouteImport } from './routes/admin/customers/index'
 import { Route as AdminCustomersCustomerIdRouteImport } from './routes/admin/customers/$customerId'
 import { Route as AdminOrdersIndexRouteImport } from './routes/admin/orders/index'
@@ -103,11 +90,6 @@ const AcceptInvitationRoute = AcceptInvitationRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OnboardingRoute = OnboardingRouteImport.update({
-  id: '/onboarding',
-  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
@@ -153,11 +135,6 @@ const AuthTwoFactorRoute = AuthTwoFactorRouteImport.update({
 const ProtectedAccountRoute = ProtectedAccountRouteImport.update({
   id: '/account',
   path: '/account',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedBillingRoute = ProtectedBillingRouteImport.update({
-  id: '/billing',
-  path: '/billing',
   getParentRoute: () => ProtectedRoute,
 } as any)
 const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
@@ -245,11 +222,6 @@ const AdminCatalogRoute = AdminCatalogRouteImport.update({
   path: '/catalog',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminCouriersRoute = AdminCouriersRouteImport.update({
-  id: '/couriers',
-  path: '/couriers',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminCustomersRoute = AdminCustomersRouteImport.update({
   id: '/customers',
   path: '/customers',
@@ -263,11 +235,6 @@ const AdminDiscountsRoute = AdminDiscountsRouteImport.update({
 const AdminFeedbackRoute = AdminFeedbackRouteImport.update({
   id: '/feedback',
   path: '/feedback',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminGuideRoute = AdminGuideRouteImport.update({
-  id: '/guide',
-  path: '/guide',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminImagesRoute = AdminImagesRouteImport.update({
@@ -315,11 +282,6 @@ const AdminStoreSettingsRoute = AdminStoreSettingsRouteImport.update({
   path: '/store-settings',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminTutorialsRoute = AdminTutorialsRouteImport.update({
-  id: '/tutorials',
-  path: '/tutorials',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
@@ -334,11 +296,6 @@ const AdminWebhooksRoute = AdminWebhooksRouteImport.update({
   id: '/webhooks',
   path: '/webhooks',
   getParentRoute: () => AdminRoute,
-} as any)
-const PaymentSuccessRoute = PaymentSuccessRouteImport.update({
-  id: '/payment/success',
-  path: '/payment/success',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const ProtectedOrdersIndexRoute = ProtectedOrdersIndexRouteImport.update({
   id: '/orders/',
@@ -360,44 +317,6 @@ const PublicShopIndexRoute = PublicShopIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => PublicShopRoute,
-} as any)
-const AdminCouriersIndexRoute = AdminCouriersIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AdminCouriersRoute,
-} as any)
-const AdminCouriersAssignmentRulesRoute =
-  AdminCouriersAssignmentRulesRouteImport.update({
-    id: '/assignment-rules',
-    path: '/assignment-rules',
-    getParentRoute: () => AdminCouriersRoute,
-  } as any)
-const AdminCouriersCodPayoutsRoute = AdminCouriersCodPayoutsRouteImport.update({
-  id: '/cod-payouts',
-  path: '/cod-payouts',
-  getParentRoute: () => AdminCouriersRoute,
-} as any)
-const AdminCouriersConnectionsRoute =
-  AdminCouriersConnectionsRouteImport.update({
-    id: '/connections',
-    path: '/connections',
-    getParentRoute: () => AdminCouriersRoute,
-  } as any)
-const AdminCouriersDeliveryOptionsRoute =
-  AdminCouriersDeliveryOptionsRouteImport.update({
-    id: '/delivery-options',
-    path: '/delivery-options',
-    getParentRoute: () => AdminCouriersRoute,
-  } as any)
-const AdminCouriersReturnsRoute = AdminCouriersReturnsRouteImport.update({
-  id: '/returns',
-  path: '/returns',
-  getParentRoute: () => AdminCouriersRoute,
-} as any)
-const AdminCouriersShipmentsRoute = AdminCouriersShipmentsRouteImport.update({
-  id: '/shipments',
-  path: '/shipments',
-  getParentRoute: () => AdminCouriersRoute,
 } as any)
 const AdminCustomersIndexRoute = AdminCustomersIndexRouteImport.update({
   id: '/',
@@ -456,7 +375,6 @@ export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/accept-invitation': typeof AcceptInvitationRoute
   '/admin': typeof AdminRouteWithChildren
-  '/onboarding': typeof OnboardingRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/auth-complete': typeof AuthAuthCompleteRoute
@@ -466,7 +384,6 @@ export interface FileRoutesByFullPath {
   '/signup': typeof AuthSignupRoute
   '/two-factor': typeof AuthTwoFactorRoute
   '/account': typeof ProtectedAccountRoute
-  '/billing': typeof ProtectedBillingRoute
   '/dashboard': typeof ProtectedDashboardRoute
   '/settings': typeof ProtectedSettingsRoute
   '/about': typeof PublicAboutRoute
@@ -482,11 +399,9 @@ export interface FileRoutesByFullPath {
   '/track-order': typeof PublicTrackOrderRoute
   '/admin/activity': typeof AdminActivityRoute
   '/admin/catalog': typeof AdminCatalogRoute
-  '/admin/couriers': typeof AdminCouriersRouteWithChildren
   '/admin/customers': typeof AdminCustomersRouteWithChildren
   '/admin/discounts': typeof AdminDiscountsRoute
   '/admin/feedback': typeof AdminFeedbackRoute
-  '/admin/guide': typeof AdminGuideRoute
   '/admin/images': typeof AdminImagesRoute
   '/admin/inventory': typeof AdminInventoryRoute
   '/admin/orders': typeof AdminOrdersRouteWithChildren
@@ -496,19 +411,11 @@ export interface FileRoutesByFullPath {
   '/admin/roles': typeof AdminRolesRouteWithChildren
   '/admin/shipping': typeof AdminShippingRoute
   '/admin/store-settings': typeof AdminStoreSettingsRoute
-  '/admin/tutorials': typeof AdminTutorialsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/visitors': typeof AdminVisitorsRoute
   '/admin/webhooks': typeof AdminWebhooksRoute
-  '/payment/success': typeof PaymentSuccessRoute
   '/admin/': typeof AdminIndexRoute
   '/orders/$orderNumber': typeof ProtectedOrdersOrderNumberRoute
-  '/admin/couriers/assignment-rules': typeof AdminCouriersAssignmentRulesRoute
-  '/admin/couriers/cod-payouts': typeof AdminCouriersCodPayoutsRoute
-  '/admin/couriers/connections': typeof AdminCouriersConnectionsRoute
-  '/admin/couriers/delivery-options': typeof AdminCouriersDeliveryOptionsRoute
-  '/admin/couriers/returns': typeof AdminCouriersReturnsRoute
-  '/admin/couriers/shipments': typeof AdminCouriersShipmentsRoute
   '/admin/customers/$customerId': typeof AdminCustomersCustomerIdRoute
   '/admin/orders/$orderId': typeof AdminOrdersOrderIdRoute
   '/admin/products/$productId': typeof AdminProductsProductIdRoute
@@ -517,7 +424,6 @@ export interface FileRoutesByFullPath {
   '/orders/': typeof ProtectedOrdersIndexRoute
   '/checkout/': typeof PublicCheckoutIndexRoute
   '/shop/': typeof PublicShopIndexRoute
-  '/admin/couriers/': typeof AdminCouriersIndexRoute
   '/admin/customers/': typeof AdminCustomersIndexRoute
   '/admin/orders/': typeof AdminOrdersIndexRoute
   '/admin/products/': typeof AdminProductsIndexRoute
@@ -527,7 +433,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
   '/accept-invitation': typeof AcceptInvitationRoute
-  '/onboarding': typeof OnboardingRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/auth-complete': typeof AuthAuthCompleteRoute
@@ -537,7 +442,6 @@ export interface FileRoutesByTo {
   '/signup': typeof AuthSignupRoute
   '/two-factor': typeof AuthTwoFactorRoute
   '/account': typeof ProtectedAccountRoute
-  '/billing': typeof ProtectedBillingRoute
   '/dashboard': typeof ProtectedDashboardRoute
   '/settings': typeof ProtectedSettingsRoute
   '/about': typeof PublicAboutRoute
@@ -553,7 +457,6 @@ export interface FileRoutesByTo {
   '/admin/catalog': typeof AdminCatalogRoute
   '/admin/discounts': typeof AdminDiscountsRoute
   '/admin/feedback': typeof AdminFeedbackRoute
-  '/admin/guide': typeof AdminGuideRoute
   '/admin/images': typeof AdminImagesRoute
   '/admin/inventory': typeof AdminInventoryRoute
   '/admin/overview': typeof AdminOverviewRoute
@@ -561,19 +464,11 @@ export interface FileRoutesByTo {
   '/admin/roles': typeof AdminRolesRouteWithChildren
   '/admin/shipping': typeof AdminShippingRoute
   '/admin/store-settings': typeof AdminStoreSettingsRoute
-  '/admin/tutorials': typeof AdminTutorialsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/visitors': typeof AdminVisitorsRoute
   '/admin/webhooks': typeof AdminWebhooksRoute
-  '/payment/success': typeof PaymentSuccessRoute
   '/admin': typeof AdminIndexRoute
   '/orders/$orderNumber': typeof ProtectedOrdersOrderNumberRoute
-  '/admin/couriers/assignment-rules': typeof AdminCouriersAssignmentRulesRoute
-  '/admin/couriers/cod-payouts': typeof AdminCouriersCodPayoutsRoute
-  '/admin/couriers/connections': typeof AdminCouriersConnectionsRoute
-  '/admin/couriers/delivery-options': typeof AdminCouriersDeliveryOptionsRoute
-  '/admin/couriers/returns': typeof AdminCouriersReturnsRoute
-  '/admin/couriers/shipments': typeof AdminCouriersShipmentsRoute
   '/admin/customers/$customerId': typeof AdminCustomersCustomerIdRoute
   '/admin/orders/$orderId': typeof AdminOrdersOrderIdRoute
   '/admin/products/$productId': typeof AdminProductsProductIdRoute
@@ -582,7 +477,6 @@ export interface FileRoutesByTo {
   '/orders': typeof ProtectedOrdersIndexRoute
   '/checkout': typeof PublicCheckoutIndexRoute
   '/shop': typeof PublicShopIndexRoute
-  '/admin/couriers': typeof AdminCouriersIndexRoute
   '/admin/customers': typeof AdminCustomersIndexRoute
   '/admin/orders': typeof AdminOrdersIndexRoute
   '/admin/products': typeof AdminProductsIndexRoute
@@ -596,7 +490,6 @@ export interface FileRoutesById {
   '/_public': typeof PublicRouteWithChildren
   '/accept-invitation': typeof AcceptInvitationRoute
   '/admin': typeof AdminRouteWithChildren
-  '/onboarding': typeof OnboardingRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_auth/auth-complete': typeof AuthAuthCompleteRoute
@@ -606,7 +499,6 @@ export interface FileRoutesById {
   '/_auth/signup': typeof AuthSignupRoute
   '/_auth/two-factor': typeof AuthTwoFactorRoute
   '/_protected/account': typeof ProtectedAccountRoute
-  '/_protected/billing': typeof ProtectedBillingRoute
   '/_protected/dashboard': typeof ProtectedDashboardRoute
   '/_protected/settings': typeof ProtectedSettingsRoute
   '/_public/about': typeof PublicAboutRoute
@@ -622,11 +514,9 @@ export interface FileRoutesById {
   '/_public/track-order': typeof PublicTrackOrderRoute
   '/admin/activity': typeof AdminActivityRoute
   '/admin/catalog': typeof AdminCatalogRoute
-  '/admin/couriers': typeof AdminCouriersRouteWithChildren
   '/admin/customers': typeof AdminCustomersRouteWithChildren
   '/admin/discounts': typeof AdminDiscountsRoute
   '/admin/feedback': typeof AdminFeedbackRoute
-  '/admin/guide': typeof AdminGuideRoute
   '/admin/images': typeof AdminImagesRoute
   '/admin/inventory': typeof AdminInventoryRoute
   '/admin/orders': typeof AdminOrdersRouteWithChildren
@@ -636,20 +526,12 @@ export interface FileRoutesById {
   '/admin/roles': typeof AdminRolesRouteWithChildren
   '/admin/shipping': typeof AdminShippingRoute
   '/admin/store-settings': typeof AdminStoreSettingsRoute
-  '/admin/tutorials': typeof AdminTutorialsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/visitors': typeof AdminVisitorsRoute
   '/admin/webhooks': typeof AdminWebhooksRoute
-  '/payment/success': typeof PaymentSuccessRoute
   '/_public/': typeof PublicIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/_protected/orders/$orderNumber': typeof ProtectedOrdersOrderNumberRoute
-  '/admin/couriers/assignment-rules': typeof AdminCouriersAssignmentRulesRoute
-  '/admin/couriers/cod-payouts': typeof AdminCouriersCodPayoutsRoute
-  '/admin/couriers/connections': typeof AdminCouriersConnectionsRoute
-  '/admin/couriers/delivery-options': typeof AdminCouriersDeliveryOptionsRoute
-  '/admin/couriers/returns': typeof AdminCouriersReturnsRoute
-  '/admin/couriers/shipments': typeof AdminCouriersShipmentsRoute
   '/admin/customers/$customerId': typeof AdminCustomersCustomerIdRoute
   '/admin/orders/$orderId': typeof AdminOrdersOrderIdRoute
   '/admin/products/$productId': typeof AdminProductsProductIdRoute
@@ -658,7 +540,6 @@ export interface FileRoutesById {
   '/_protected/orders/': typeof ProtectedOrdersIndexRoute
   '/_public/checkout/': typeof PublicCheckoutIndexRoute
   '/_public/shop/': typeof PublicShopIndexRoute
-  '/admin/couriers/': typeof AdminCouriersIndexRoute
   '/admin/customers/': typeof AdminCustomersIndexRoute
   '/admin/orders/': typeof AdminOrdersIndexRoute
   '/admin/products/': typeof AdminProductsIndexRoute
@@ -671,7 +552,6 @@ export interface FileRouteTypes {
     | '/'
     | '/accept-invitation'
     | '/admin'
-    | '/onboarding'
     | '/robots.txt'
     | '/sitemap.xml'
     | '/auth-complete'
@@ -681,7 +561,6 @@ export interface FileRouteTypes {
     | '/signup'
     | '/two-factor'
     | '/account'
-    | '/billing'
     | '/dashboard'
     | '/settings'
     | '/about'
@@ -697,11 +576,9 @@ export interface FileRouteTypes {
     | '/track-order'
     | '/admin/activity'
     | '/admin/catalog'
-    | '/admin/couriers'
     | '/admin/customers'
     | '/admin/discounts'
     | '/admin/feedback'
-    | '/admin/guide'
     | '/admin/images'
     | '/admin/inventory'
     | '/admin/orders'
@@ -711,19 +588,11 @@ export interface FileRouteTypes {
     | '/admin/roles'
     | '/admin/shipping'
     | '/admin/store-settings'
-    | '/admin/tutorials'
     | '/admin/users'
     | '/admin/visitors'
     | '/admin/webhooks'
-    | '/payment/success'
     | '/admin/'
     | '/orders/$orderNumber'
-    | '/admin/couriers/assignment-rules'
-    | '/admin/couriers/cod-payouts'
-    | '/admin/couriers/connections'
-    | '/admin/couriers/delivery-options'
-    | '/admin/couriers/returns'
-    | '/admin/couriers/shipments'
     | '/admin/customers/$customerId'
     | '/admin/orders/$orderId'
     | '/admin/products/$productId'
@@ -732,7 +601,6 @@ export interface FileRouteTypes {
     | '/orders/'
     | '/checkout/'
     | '/shop/'
-    | '/admin/couriers/'
     | '/admin/customers/'
     | '/admin/orders/'
     | '/admin/products/'
@@ -742,7 +610,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/accept-invitation'
-    | '/onboarding'
     | '/robots.txt'
     | '/sitemap.xml'
     | '/auth-complete'
@@ -752,7 +619,6 @@ export interface FileRouteTypes {
     | '/signup'
     | '/two-factor'
     | '/account'
-    | '/billing'
     | '/dashboard'
     | '/settings'
     | '/about'
@@ -768,7 +634,6 @@ export interface FileRouteTypes {
     | '/admin/catalog'
     | '/admin/discounts'
     | '/admin/feedback'
-    | '/admin/guide'
     | '/admin/images'
     | '/admin/inventory'
     | '/admin/overview'
@@ -776,19 +641,11 @@ export interface FileRouteTypes {
     | '/admin/roles'
     | '/admin/shipping'
     | '/admin/store-settings'
-    | '/admin/tutorials'
     | '/admin/users'
     | '/admin/visitors'
     | '/admin/webhooks'
-    | '/payment/success'
     | '/admin'
     | '/orders/$orderNumber'
-    | '/admin/couriers/assignment-rules'
-    | '/admin/couriers/cod-payouts'
-    | '/admin/couriers/connections'
-    | '/admin/couriers/delivery-options'
-    | '/admin/couriers/returns'
-    | '/admin/couriers/shipments'
     | '/admin/customers/$customerId'
     | '/admin/orders/$orderId'
     | '/admin/products/$productId'
@@ -797,7 +654,6 @@ export interface FileRouteTypes {
     | '/orders'
     | '/checkout'
     | '/shop'
-    | '/admin/couriers'
     | '/admin/customers'
     | '/admin/orders'
     | '/admin/products'
@@ -810,7 +666,6 @@ export interface FileRouteTypes {
     | '/_public'
     | '/accept-invitation'
     | '/admin'
-    | '/onboarding'
     | '/robots.txt'
     | '/sitemap.xml'
     | '/_auth/auth-complete'
@@ -820,7 +675,6 @@ export interface FileRouteTypes {
     | '/_auth/signup'
     | '/_auth/two-factor'
     | '/_protected/account'
-    | '/_protected/billing'
     | '/_protected/dashboard'
     | '/_protected/settings'
     | '/_public/about'
@@ -836,11 +690,9 @@ export interface FileRouteTypes {
     | '/_public/track-order'
     | '/admin/activity'
     | '/admin/catalog'
-    | '/admin/couriers'
     | '/admin/customers'
     | '/admin/discounts'
     | '/admin/feedback'
-    | '/admin/guide'
     | '/admin/images'
     | '/admin/inventory'
     | '/admin/orders'
@@ -850,20 +702,12 @@ export interface FileRouteTypes {
     | '/admin/roles'
     | '/admin/shipping'
     | '/admin/store-settings'
-    | '/admin/tutorials'
     | '/admin/users'
     | '/admin/visitors'
     | '/admin/webhooks'
-    | '/payment/success'
     | '/_public/'
     | '/admin/'
     | '/_protected/orders/$orderNumber'
-    | '/admin/couriers/assignment-rules'
-    | '/admin/couriers/cod-payouts'
-    | '/admin/couriers/connections'
-    | '/admin/couriers/delivery-options'
-    | '/admin/couriers/returns'
-    | '/admin/couriers/shipments'
     | '/admin/customers/$customerId'
     | '/admin/orders/$orderId'
     | '/admin/products/$productId'
@@ -872,7 +716,6 @@ export interface FileRouteTypes {
     | '/_protected/orders/'
     | '/_public/checkout/'
     | '/_public/shop/'
-    | '/admin/couriers/'
     | '/admin/customers/'
     | '/admin/orders/'
     | '/admin/products/'
@@ -886,10 +729,8 @@ export interface RootRouteChildren {
   PublicRoute: typeof PublicRouteWithChildren
   AcceptInvitationRoute: typeof AcceptInvitationRoute
   AdminRoute: typeof AdminRouteWithChildren
-  OnboardingRoute: typeof OnboardingRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  PaymentSuccessRoute: typeof PaymentSuccessRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -927,13 +768,6 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/onboarding': {
-      id: '/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/robots.txt': {
@@ -997,13 +831,6 @@ declare module '@tanstack/react-router' {
       path: '/account'
       fullPath: '/account'
       preLoaderRoute: typeof ProtectedAccountRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
-    '/_protected/billing': {
-      id: '/_protected/billing'
-      path: '/billing'
-      fullPath: '/billing'
-      preLoaderRoute: typeof ProtectedBillingRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/dashboard': {
@@ -1125,13 +952,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCatalogRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/couriers': {
-      id: '/admin/couriers'
-      path: '/couriers'
-      fullPath: '/admin/couriers'
-      preLoaderRoute: typeof AdminCouriersRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/customers': {
       id: '/admin/customers'
       path: '/customers'
@@ -1151,13 +971,6 @@ declare module '@tanstack/react-router' {
       path: '/feedback'
       fullPath: '/admin/feedback'
       preLoaderRoute: typeof AdminFeedbackRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/guide': {
-      id: '/admin/guide'
-      path: '/guide'
-      fullPath: '/admin/guide'
-      preLoaderRoute: typeof AdminGuideRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/images': {
@@ -1223,13 +1036,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminStoreSettingsRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/tutorials': {
-      id: '/admin/tutorials'
-      path: '/tutorials'
-      fullPath: '/admin/tutorials'
-      preLoaderRoute: typeof AdminTutorialsRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/users': {
       id: '/admin/users'
       path: '/users'
@@ -1250,13 +1056,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/webhooks'
       preLoaderRoute: typeof AdminWebhooksRouteImport
       parentRoute: typeof AdminRoute
-    }
-    '/payment/success': {
-      id: '/payment/success'
-      path: '/payment/success'
-      fullPath: '/payment/success'
-      preLoaderRoute: typeof PaymentSuccessRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/_protected/orders/': {
       id: '/_protected/orders/'
@@ -1285,55 +1084,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/shop/'
       preLoaderRoute: typeof PublicShopIndexRouteImport
       parentRoute: typeof PublicShopRoute
-    }
-    '/admin/couriers/': {
-      id: '/admin/couriers/'
-      path: '/'
-      fullPath: '/admin/couriers/'
-      preLoaderRoute: typeof AdminCouriersIndexRouteImport
-      parentRoute: typeof AdminCouriersRoute
-    }
-    '/admin/couriers/assignment-rules': {
-      id: '/admin/couriers/assignment-rules'
-      path: '/assignment-rules'
-      fullPath: '/admin/couriers/assignment-rules'
-      preLoaderRoute: typeof AdminCouriersAssignmentRulesRouteImport
-      parentRoute: typeof AdminCouriersRoute
-    }
-    '/admin/couriers/cod-payouts': {
-      id: '/admin/couriers/cod-payouts'
-      path: '/cod-payouts'
-      fullPath: '/admin/couriers/cod-payouts'
-      preLoaderRoute: typeof AdminCouriersCodPayoutsRouteImport
-      parentRoute: typeof AdminCouriersRoute
-    }
-    '/admin/couriers/connections': {
-      id: '/admin/couriers/connections'
-      path: '/connections'
-      fullPath: '/admin/couriers/connections'
-      preLoaderRoute: typeof AdminCouriersConnectionsRouteImport
-      parentRoute: typeof AdminCouriersRoute
-    }
-    '/admin/couriers/delivery-options': {
-      id: '/admin/couriers/delivery-options'
-      path: '/delivery-options'
-      fullPath: '/admin/couriers/delivery-options'
-      preLoaderRoute: typeof AdminCouriersDeliveryOptionsRouteImport
-      parentRoute: typeof AdminCouriersRoute
-    }
-    '/admin/couriers/returns': {
-      id: '/admin/couriers/returns'
-      path: '/returns'
-      fullPath: '/admin/couriers/returns'
-      preLoaderRoute: typeof AdminCouriersReturnsRouteImport
-      parentRoute: typeof AdminCouriersRoute
-    }
-    '/admin/couriers/shipments': {
-      id: '/admin/couriers/shipments'
-      path: '/shipments'
-      fullPath: '/admin/couriers/shipments'
-      preLoaderRoute: typeof AdminCouriersShipmentsRouteImport
-      parentRoute: typeof AdminCouriersRoute
     }
     '/admin/customers/': {
       id: '/admin/customers/'
@@ -1430,7 +1180,6 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface ProtectedRouteChildren {
   ProtectedAccountRoute: typeof ProtectedAccountRoute
-  ProtectedBillingRoute: typeof ProtectedBillingRoute
   ProtectedDashboardRoute: typeof ProtectedDashboardRoute
   ProtectedSettingsRoute: typeof ProtectedSettingsRoute
   ProtectedOrdersOrderNumberRoute: typeof ProtectedOrdersOrderNumberRoute
@@ -1439,7 +1188,6 @@ interface ProtectedRouteChildren {
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedAccountRoute: ProtectedAccountRoute,
-  ProtectedBillingRoute: ProtectedBillingRoute,
   ProtectedDashboardRoute: ProtectedDashboardRoute,
   ProtectedSettingsRoute: ProtectedSettingsRoute,
   ProtectedOrdersOrderNumberRoute: ProtectedOrdersOrderNumberRoute,
@@ -1511,30 +1259,6 @@ const PublicRouteChildren: PublicRouteChildren = {
 const PublicRouteWithChildren =
   PublicRoute._addFileChildren(PublicRouteChildren)
 
-interface AdminCouriersRouteChildren {
-  AdminCouriersAssignmentRulesRoute: typeof AdminCouriersAssignmentRulesRoute
-  AdminCouriersCodPayoutsRoute: typeof AdminCouriersCodPayoutsRoute
-  AdminCouriersConnectionsRoute: typeof AdminCouriersConnectionsRoute
-  AdminCouriersDeliveryOptionsRoute: typeof AdminCouriersDeliveryOptionsRoute
-  AdminCouriersReturnsRoute: typeof AdminCouriersReturnsRoute
-  AdminCouriersShipmentsRoute: typeof AdminCouriersShipmentsRoute
-  AdminCouriersIndexRoute: typeof AdminCouriersIndexRoute
-}
-
-const AdminCouriersRouteChildren: AdminCouriersRouteChildren = {
-  AdminCouriersAssignmentRulesRoute: AdminCouriersAssignmentRulesRoute,
-  AdminCouriersCodPayoutsRoute: AdminCouriersCodPayoutsRoute,
-  AdminCouriersConnectionsRoute: AdminCouriersConnectionsRoute,
-  AdminCouriersDeliveryOptionsRoute: AdminCouriersDeliveryOptionsRoute,
-  AdminCouriersReturnsRoute: AdminCouriersReturnsRoute,
-  AdminCouriersShipmentsRoute: AdminCouriersShipmentsRoute,
-  AdminCouriersIndexRoute: AdminCouriersIndexRoute,
-}
-
-const AdminCouriersRouteWithChildren = AdminCouriersRoute._addFileChildren(
-  AdminCouriersRouteChildren,
-)
-
 interface AdminCustomersRouteChildren {
   AdminCustomersCustomerIdRoute: typeof AdminCustomersCustomerIdRoute
   AdminCustomersIndexRoute: typeof AdminCustomersIndexRoute
@@ -1594,11 +1318,9 @@ const AdminRolesRouteWithChildren = AdminRolesRoute._addFileChildren(
 interface AdminRouteChildren {
   AdminActivityRoute: typeof AdminActivityRoute
   AdminCatalogRoute: typeof AdminCatalogRoute
-  AdminCouriersRoute: typeof AdminCouriersRouteWithChildren
   AdminCustomersRoute: typeof AdminCustomersRouteWithChildren
   AdminDiscountsRoute: typeof AdminDiscountsRoute
   AdminFeedbackRoute: typeof AdminFeedbackRoute
-  AdminGuideRoute: typeof AdminGuideRoute
   AdminImagesRoute: typeof AdminImagesRoute
   AdminInventoryRoute: typeof AdminInventoryRoute
   AdminOrdersRoute: typeof AdminOrdersRouteWithChildren
@@ -1608,7 +1330,6 @@ interface AdminRouteChildren {
   AdminRolesRoute: typeof AdminRolesRouteWithChildren
   AdminShippingRoute: typeof AdminShippingRoute
   AdminStoreSettingsRoute: typeof AdminStoreSettingsRoute
-  AdminTutorialsRoute: typeof AdminTutorialsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminVisitorsRoute: typeof AdminVisitorsRoute
   AdminWebhooksRoute: typeof AdminWebhooksRoute
@@ -1618,11 +1339,9 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminActivityRoute: AdminActivityRoute,
   AdminCatalogRoute: AdminCatalogRoute,
-  AdminCouriersRoute: AdminCouriersRouteWithChildren,
   AdminCustomersRoute: AdminCustomersRouteWithChildren,
   AdminDiscountsRoute: AdminDiscountsRoute,
   AdminFeedbackRoute: AdminFeedbackRoute,
-  AdminGuideRoute: AdminGuideRoute,
   AdminImagesRoute: AdminImagesRoute,
   AdminInventoryRoute: AdminInventoryRoute,
   AdminOrdersRoute: AdminOrdersRouteWithChildren,
@@ -1632,7 +1351,6 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminRolesRoute: AdminRolesRouteWithChildren,
   AdminShippingRoute: AdminShippingRoute,
   AdminStoreSettingsRoute: AdminStoreSettingsRoute,
-  AdminTutorialsRoute: AdminTutorialsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminVisitorsRoute: AdminVisitorsRoute,
   AdminWebhooksRoute: AdminWebhooksRoute,
@@ -1647,10 +1365,8 @@ const rootRouteChildren: RootRouteChildren = {
   PublicRoute: PublicRouteWithChildren,
   AcceptInvitationRoute: AcceptInvitationRoute,
   AdminRoute: AdminRouteWithChildren,
-  OnboardingRoute: OnboardingRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  PaymentSuccessRoute: PaymentSuccessRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

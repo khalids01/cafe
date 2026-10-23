@@ -7,7 +7,6 @@ import { sessionController } from "./session/session.controller";
 import { notificationsController } from "./notifications/notifications.controller";
 import { feedbackController } from "./feedback/feedback.controller";
 import { shopController } from "./shop/shop.controller";
-import { polarController } from "./polar/polar.controller";
 import { rateLimitController } from "./rate-limit/rate-limit.controller";
 import { invitationsController } from "./invitations/invitations.controller";
 import { visitorsController } from "./visitors/visitors.controller";
@@ -25,13 +24,8 @@ import { adminDiscountsController } from "./admin/discounts/discounts.controller
 import { adminStoreSettingsController } from "./admin/store-settings/store-settings.controller";
 import { adminCustomersController } from "./admin/customers/customers.controller";
 import { authSettingsController } from "./admin/auth-settings/auth-settings.controller";
-import { adminDeliveryController } from "./admin/delivery/delivery.controller";
-import { courierWebhookController } from "./delivery/webhook.controller";
-
-import { youtubeController } from "./integrations/youtube/youtube.controller";
 
 export const app = new Elysia()
-  .use(youtubeController)
   .use(authController)
   .use(sessionController)
   .use(usersController)
@@ -50,13 +44,10 @@ export const app = new Elysia()
   .use(adminOrdersController)
   .use(adminImagesController)
   .use(adminShippingController)
-  .use(adminDeliveryController)
-  .use(courierWebhookController)
   .use(adminDiscountsController)
   .use(adminStoreSettingsController)
   .use(adminCustomersController)
   .use(shopController)
   .use(notificationsController)
   .use(feedbackController)
-  .use(polarController)
   .use(invitationsController);

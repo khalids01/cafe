@@ -138,26 +138,14 @@ export function OrderDetails(props: { order: ShopOrder; onRefresh: () => void })
         </div>
       </div>
 
-      {props.order.carrier || props.order.trackingNumber ? (
+      {props.order.shippedAt || props.order.deliveredAt ? (
         <div className="grid gap-2 rounded-2xl border bg-background p-4 text-sm">
-          <p className="font-medium">Delivery tracking</p>
-          <TrackingRow label="Carrier" value={props.order.carrier ?? "—"} />
-          <TrackingRow
-            label="Tracking number"
-            value={props.order.trackingNumber ?? "—"}
-          />
-          <TrackingRow
-            label="Shipped"
-            value={formatDate(props.order.shippedAt)}
-          />
-          <TrackingRow
-            label="Delivered"
-            value={formatDate(props.order.deliveredAt)}
-          />
+          <p className="font-medium">Delivery updates</p>
+          <TrackingRow label="Out for delivery" value={formatDate(props.order.shippedAt)} />
+          <TrackingRow label="Delivered" value={formatDate(props.order.deliveredAt)} />
         </div>
       ) : null}
 
-      {props.order.foodBooking ? <div className="rounded-2xl bg-muted/40 p-4 text-sm"><p className="font-medium">Fresh-food delivery window</p><p className="mt-2">{props.order.foodBooking.slot.label} · {formatDate(props.order.foodBooking.slot.startsAt)} – {formatDate(props.order.foodBooking.slot.endsAt)}</p></div> : null}
       {props.order.shippingAddress ? <section className="rounded-2xl border p-4"><h3 className="font-medium">Delivery address</h3><p className="mt-2 whitespace-pre-line text-sm leading-6 text-muted-foreground">{[props.order.shippingAddress.fullName, props.order.shippingAddress.line1, props.order.shippingAddress.line2, [props.order.shippingAddress.city, props.order.shippingAddress.postalCode].filter(Boolean).join(" "), props.order.shippingAddress.country].filter(Boolean).join("\n")}</p></section> : null}
       <Separator />
 
@@ -189,7 +177,6 @@ export function OrderDetails(props: { order: ShopOrder; onRefresh: () => void })
             <p className="col-start-2 text-sm font-semibold sm:col-start-auto">
               {formatMoney(item.totalAmount, props.order.currency)}
             </p>
-            <div className="col-span-full">{(item.unitAllocations ?? []).map(unit => <CustomerWarranty key={unit.id} unit={unit} days={item.warrantyDays ?? 0} delivered={Boolean(props.order.deliveredAt)} onRefresh={props.onRefresh} />)}</div>
           </article>
         ))}
       </div>
@@ -263,11 +250,4 @@ function SummaryRow(props: {
       </span>
     </div>
   );
-}
-
-function CustomerWarranty({ unit, days, delivered, onRefresh }: { unit: NonNullable<ShopOrder["lineItems"][number]["unitAllocations"]>[number]; days: number; delivered: boolean; onRefresh: () => void }) {
-  const [issue, setIssue] = useState("");
-  const [reference, setReference] = useState(() => crypto.randomUUID());
-  const claim = useMutation({ mutationFn: async () => { const { error } = await client.shop["warranty-claims"].post({ allocationId: unit.id, reference, issue: issue.trim() }); if (error) throw new Error(String(error.value?.message || "Could not open warranty claim")); }, onSuccess: () => { setIssue(""); setReference(crypto.randomUUID()); onRefresh(); } });
-  return <div className="space-y-2 rounded border p-2 text-sm"><p>Unit: {unit.serial ?? unit.imei} · {days} warranty days from delivery</p>{unit.claims.map(c => <p key={c.id}>Claim {c.state}: {c.issue}{c.resolution ? ` · ${c.resolution}` : ""}</p>)}{delivered && days > 0 && unit.state === "shipped" && !unit.claims.some(c => c.state === "open") ? <><label>Describe the problem<Input maxLength={2000} value={issue} onChange={e => setIssue(e.target.value)} /></label><Button disabled={!issue.trim() || claim.isPending} onClick={() => claim.mutate()}>{claim.isPending ? "Submitting..." : "Request warranty review"}</Button></> : null}{claim.isError ? <p role="alert" className="text-destructive">{claim.error.message}</p> : null}</div>;
 }

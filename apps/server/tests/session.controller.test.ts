@@ -26,9 +26,7 @@ const getAuthSessionMock = mock(
         image: "https://example.com/avatar.png",
         banned: false,
         archived: false,
-        onboardingComplete: true,
-        plan: null,
-        subscriptionStatus: null,
+
         twoFactorEnabled: false,
       },
       session: {
@@ -75,9 +73,7 @@ describe("sessionController", () => {
         name: "Test User",
         email: "test@example.com",
         image: "https://example.com/avatar.png",
-        onboardingComplete: true,
-        plan: null,
-        subscriptionStatus: null,
+
         twoFactorEnabled: false,
       },
       permissions: [Permissions.FeedbackSubmit],

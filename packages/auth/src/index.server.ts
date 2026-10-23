@@ -23,5 +23,3 @@ export type {
   ClientSessionResult,
   ClientSessionUser,
 } from "./session";
-
-export { PLANS, type Plan, type PlanSlug } from "./plans.server";

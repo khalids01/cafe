@@ -17,8 +17,7 @@
       "typescript": "^7.0.2",
       "@types/bun": "^1.3.9",
       "better-auth": "^1.4.18",
-      "@prisma/client": "^7.4.0",
-      "@polar-sh/better-auth": "^1.8.1"
+      "@prisma/client": "^7.4.0"
     }
   },
   "type": "module",
@@ -44,27 +43,13 @@
     "test:e2e:provision": "bun --env-file=tests/env/.env tests/setup/provision-users.ts",
     "test:e2e:reset": "bun --env-file=tests/env/.env tests/setup/reset-test-state.ts",
     "test:e2e:setup": "bun --env-file=tests/env/.env ./node_modules/.bin/playwright test --project=setup",
-    "test:e2e:integration": "bun --env-file=tests/env/.env test tests/integration/ecommerce.real-db.test.ts",
     "test:e2e": "bun --env-file=tests/env/.env ./node_modules/.bin/playwright test",
     "test:e2e:auth": "bun --env-file=tests/env/.env ./node_modules/.bin/playwright test --project=chromium --grep @auth",
     "test:ecommerce:coverage": "bun --cwd apps/server test --coverage --coverage-reporter=text --coverage-reporter=lcov --coverage-dir=../../tests/artifacts/coverage ./tests",
     "test:security:secrets": "bun tests/security/scan-secrets.ts",
     "e2e": "DISPLAY=${DISPLAY:-:1} E2E_MANAGED_SERVER=true bun --env-file=tests/env/.env ./node_modules/.bin/playwright test",
-    "tutorial:record": "bun --env-file=tests/env/.env tutorial/shared/cli.ts record",
-    "tutorial:render": "bun tutorial/shared/cli.ts render",
     "view-archi": "bun scripts/serve-architecture.ts",
-    "images:publish": "bash scripts/publish-images.sh",
-    "tutorial:list": "bun tutorial/shared/cli.ts list",
-    "tutorial:publish": "bun tutorial/shared/cli.ts publish",
-    "tutorial:record:legacy": "bun --env-file=tests/env/.env tutorial/00-product-to-completed-order/record.legacy.ts",
-    "tutorial:render:legacy": "bun tutorial/00-product-to-completed-order/render.legacy.ts",
-    "tutorial:storyboards": "bun tutorial/shared/storyboards.ts",
-    "tutorial:prepare": "bun tutorial/shared/cli.ts prepare",
-    "tutorial:audio": "bun tutorial/shared/cli.ts audio",
-    "tutorial:check": "bun tutorial/shared/validate.ts",
-    "tutorial:uploads:status": "bun tutorial/shared/upload-ledger.ts",
-    "tutorial:uploads:batch": "bun tutorial/shared/upload-batch.ts",
-    "tutorial:guides:sync": "bun tutorial/shared/sync-guide.ts"
+    "images:publish": "bash scripts/publish-images.sh"
   },
   "dependencies": {
     "@env": "workspace:*",

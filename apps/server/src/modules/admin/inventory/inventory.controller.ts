@@ -1,9 +1,9 @@
-import { Elysia, t } from "elysia";
+import { Elysia } from "elysia";
 import { Permissions } from "@rbac";
 import { authGuard } from "@/guards/auth.guard";
 import { requireAllPermissions } from "@/rbac/guards/permissions.guard";
 import {
-  AdjustStockDto, RegisterUnitDto,
+  AdjustStockDto,
   UpdateBatchDispositionDto,
   CreateLocationDto,
   CreateSupplierDto,
@@ -48,8 +48,6 @@ export const adminInventoryController = new Elysia({
   },
 })
   .use(authGuard)
-  .get("/units", ({ query }) => adminInventoryService.listUnits(query.variantId), { beforeHandle: readInventory, query: t.Object({ variantId: t.String({ minLength: 1, maxLength: 128 }) }) })
-  .post("/units", async ({ body, userId, set }) => { try { return await adminInventoryService.registerUnit(body, userId!); } catch (e) { return handleInventoryError(e, set); } }, { beforeHandle: manageInventory, body: RegisterUnitDto })
   .get(
     "/suppliers",
     ({ query }) => adminInventoryService.listSuppliers(query),

@@ -13,8 +13,6 @@ export type CategoryDraft = {
   imageUrl: string;
   parentId: string;
   fulfillmentKind: NonNullable<Category["fulfillmentKind"]>;
-  serialTracking: NonNullable<Category["serialTracking"]>;
-  warrantyDays: string;
   brandPolicy: CategoryBrandPolicy;
   showStoreBrand: boolean;
   isActive: boolean;
@@ -52,8 +50,6 @@ export function categoryDraft(category?: Category): CategoryDraft {
     imageUrl: category?.imageUrl ?? "",
     parentId: category?.parentId ?? "none",
     fulfillmentKind: category?.fulfillmentKind ?? "standard",
-    serialTracking: category?.serialTracking ?? "none",
-    warrantyDays: String(category?.warrantyDays ?? 0),
     brandPolicy: category?.brandPolicy ?? "optional",
     showStoreBrand: category?.showStoreBrand ?? false,
     isActive: category?.isActive ?? true,

@@ -1,4 +1,3 @@
-import { PageTutorialButton } from "@/features/admin/tutorials/tutorial-button";
 import { noIndexHead } from "@/features/seo/metadata";
 import {
   createFileRoute,
@@ -26,7 +25,6 @@ import {
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {
-  BookOpen,
   LayoutDashboard,
   Users,
   ChevronRight,
@@ -48,11 +46,6 @@ import {
   ChartNoAxesColumn,
   Settings,
   PackageOpen,
-  Cable,
-  Route as RouteIcon,
-  PackageCheck,
-  RotateCcw,
-  Banknote,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { LucideIcon } from "lucide-react";
@@ -77,7 +70,6 @@ import {
   canShowDiscountsNav,
   canShowStoreSettingsNav,
   canShowCustomersNav,
-  canShowDeliveryNav,
 } from "@/features/admin/lib/admin-access";
 import { adminMiddleware } from "@/middleware/admin";
 import { useSession } from "@/providers/session-provider";
@@ -117,14 +109,13 @@ const NAV_STATE_KEY = "admin-sidebar-groups";
 
 function getAdminNavigation(session: ClientSession | null | undefined) {
   const overview: AdminNavItem = { title: "Overview", icon: LayoutDashboard, url: "/admin/overview", show: true };
-  const tutorials: AdminNavItem = { title: "Guide", icon: BookOpen, url: "/admin/guide", show: true };
   const groups: AdminNavGroup[] = [
     {
-      title: "Shop Management",
+      title: "Menu",
       icon: ShoppingBag,
       items: [
-        { title: "Products", icon: PackageSearch, url: "/admin/products", show: canShowProductsNav(session) },
-        { title: "Catalog", icon: Boxes, url: "/admin/catalog", show: canShowCatalogNav(session) },
+        { title: "Menu items", icon: PackageSearch, url: "/admin/products", show: canShowProductsNav(session) },
+        { title: "Menu categories", icon: Boxes, url: "/admin/catalog", show: canShowCatalogNav(session) },
         { title: "Inventory", icon: Warehouse, url: "/admin/inventory", show: canShowInventoryNav(session) },
         { title: "Discounts", icon: BadgePercent, url: "/admin/discounts", show: canShowDiscountsNav(session) },
         { title: "Images", icon: Images, url: "/admin/images", show: canShowImagesNav(session) },
@@ -142,20 +133,7 @@ function getAdminNavigation(session: ClientSession | null | undefined) {
       title: "Delivery",
       icon: Truck,
       items: [
-        { title: "Shipping methods", icon: PackageOpen, url: "/admin/shipping", show: canShowShippingNav(session) },
-      ],
-    },
-    {
-      title: "Couriers",
-      icon: Truck,
-      items: [
-        { title: "Overview", icon: LayoutDashboard, url: "/admin/couriers", show: canShowDeliveryNav(session) },
-        { title: "Connections", icon: Cable, url: "/admin/couriers/connections", show: canShowDeliveryNav(session) },
-        { title: "Delivery options", icon: PackageCheck, url: "/admin/couriers/delivery-options", show: canShowDeliveryNav(session) },
-        { title: "Assignment rules", icon: RouteIcon, url: "/admin/couriers/assignment-rules", show: canShowDeliveryNav(session) },
-        { title: "Shipments", icon: Truck, url: "/admin/couriers/shipments", show: canShowDeliveryNav(session) },
-        { title: "Returns", icon: RotateCcw, url: "/admin/couriers/returns", show: canShowDeliveryNav(session) },
-        { title: "COD payouts", icon: Banknote, url: "/admin/couriers/cod-payouts", show: canShowDeliveryNav(session) },
+        { title: "Delivery fees", icon: PackageOpen, url: "/admin/shipping", show: canShowShippingNav(session) },
       ],
     },
     {
@@ -187,7 +165,6 @@ function getAdminNavigation(session: ClientSession | null | undefined) {
   ];
   return {
     overview,
-    tutorials,
     groups: groups.map((group) => ({ ...group, items: group.items.filter((item) => item.show) })).filter((group) => group.items.length > 0),
   };
 }
@@ -196,7 +173,7 @@ function AdminLayout() {
   const location = useLocation();
   const { session } = useSession();
   const navigation = useMemo(() => getAdminNavigation(session), [session]);
-  const visibleNavItems = [navigation.overview, navigation.tutorials, ...navigation.groups.flatMap((group) => group.items)];
+  const visibleNavItems = [navigation.overview, ...navigation.groups.flatMap((group) => group.items)];
   const currentNavItem = [...visibleNavItems].sort((a, b) => b.url.length - a.url.length).find((item) => routeIsActive(location.pathname, item.url));
   const activeGroup = navigation.groups.find((group) => group.items.some((item) => routeIsActive(location.pathname, item.url)))?.title;
   const [openGroups, setOpenGroups] = useState<Set<string>>(() => new Set(activeGroup ? [activeGroup] : []));
@@ -240,7 +217,6 @@ function AdminLayout() {
               <SidebarGroupContent>
                 <SidebarMenu>
                   <AdminNavLink item={navigation.overview} pathname={location.pathname} />
-                  <AdminNavLink item={navigation.tutorials} pathname={location.pathname} />
                   {navigation.groups.map((group) => (
                     <AdminNavCategory
                       key={group.title}
@@ -282,7 +258,6 @@ function AdminLayout() {
             </div>
           </header>
           <main className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto p-6">
-            <PageTutorialButton key={location.pathname} />
             <Outlet />
           </main>
         </SidebarInset>
@@ -292,7 +267,6 @@ function AdminLayout() {
 }
 
 function routeIsActive(pathname: string, url: string) {
-  if (url === "/admin/couriers") return pathname === url || pathname === `${url}/`;
   return pathname === url || pathname.startsWith(`${url}/`);
 }
 

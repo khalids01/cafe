@@ -71,7 +71,6 @@ export function mapProduct(row: any) {
     description: row.description,
     descriptionHtml: row.descriptionHtml,
     fulfillmentKind: row.category?.fulfillmentKind ?? "standard",
-    warrantyDays: row.category?.fulfillmentKind === "gadget" ? row.category.warrantyDays ?? 0 : 0,
     categoryId: row.categoryId,
     category: row.category ?? null,
     brandId: row.brandId,

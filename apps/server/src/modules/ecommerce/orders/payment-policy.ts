@@ -1,4 +1,4 @@
-/** Pure receipt accounting. Refunds do not create a new courier receivable. */
+/** Pure receipt accounting. Refunds do not increase the outstanding amount due. */
 export function paymentMinorUnits(value: string): bigint {
   if (!/^\d+(?:\.\d{1,2})?$/.test(value)) throw new Error("Invalid money amount");
   const [whole, fraction = ""] = value.split(".");

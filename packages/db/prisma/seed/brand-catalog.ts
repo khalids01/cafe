@@ -55,8 +55,6 @@ export async function seedBrandCatalog(
             name,
             description: `Explore ${name.toLowerCase()} at ${brand.name}.`,
             fulfillmentKind: kind,
-            warrantyDays: 0,
-            serialTracking: "none",
             brandPolicy: "default_store",
             showStoreBrand: true,
             isFeatured: true,

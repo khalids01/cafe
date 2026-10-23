@@ -39,6 +39,8 @@ const updateMock = mock(async () => ({
 }));
 
 mock.module("@db/server", () => ({
+  revokeAllUserSessions: async () => {},
+  revokeUserSession: async () => {},
   default: {
     user: {
       findUnique: findUniqueMock,

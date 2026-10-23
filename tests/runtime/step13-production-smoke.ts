@@ -87,12 +87,12 @@ try {
   requireCheck((await fetch("http://localhost:3014/", { signal: AbortSignal.timeout(10000) })).ok, "Production web root renders");
   await stop(web); web = undefined;
   await stop(api); api = undefined;
-  // Restart the actual compiled binary and verify auth persistence, without courier network calls.
+  // Restart the actual compiled binary and verify auth persistence.
   api = Bun.spawn([resolve(artifacts, "api")], { env: safeEnv, stdout: Bun.file(resolve(artifacts, "api-restart.txt")), stderr: Bun.file(resolve(artifacts, "api-restart-stderr.txt")) });
   await ready("http://localhost:3013/health/live");
   requireCheck((await fetch("http://localhost:3013/admin/orders", { headers: { cookie } })).ok, "Session survives compiled API restart");
   await stop(api); api = undefined;
-  await Bun.write(resolve(artifacts, "smoke.json"), JSON.stringify({ checks, productionMode: true, courierWorkers: "disabled", capacityTest: "not run" }, null, 2));
+  await Bun.write(resolve(artifacts, "smoke.json"), JSON.stringify({ checks, productionMode: true, capacityTest: "not run" }, null, 2));
   console.log(`Step 13 production smoke: ${checks.length} checks passed`);
 } finally {
   const cleanup = await Promise.allSettled([stop(web), stop(api)]);

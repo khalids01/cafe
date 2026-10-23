@@ -11,8 +11,6 @@
     ]
   },
   "include": [
-    "./fixtures/v3.ts",
-    "./fixtures/courier-http.ts",
     "./__step_8_3__/v3-*.spec.ts",
     "./setup/auth.setup.ts",
     "../setup/provision-users.ts",

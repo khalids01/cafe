@@ -76,7 +76,6 @@ describe("admin inventory controller RBAC", () => {
 });
 
 it.each([
-  ["POST", "/admin/inventory/units", { variantId: "variant", locationId: "location", serial: "SERIAL" }],
   ["PATCH", "/admin/inventory/batches/batch/disposition", { disposition: "unsafe", reason: "Inspection" }],
 ] as const)("unit/safety mutation denies inventory-read-only actor: %s %s", async (method, path, body) => {
   getAuthSessionMock.mockResolvedValueOnce({ user: { id: "admin-1", role: "ADMIN", banned: false, archived: false }, permissions: [Permissions.AdminAccess, Permissions.AdminInventoryRead] });

@@ -215,10 +215,6 @@ export function ecommercePermissions(
       session,
       Permissions.AdminShippingManage,
     ),
-    canManageDelivery: hasAdminPermission(
-      session,
-      Permissions.AdminDeliverySettings,
-    ),
     canManageDiscounts: hasAdminPermission(
       session,
       Permissions.AdminDiscountsManage,

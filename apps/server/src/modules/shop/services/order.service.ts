@@ -1,5 +1,4 @@
 import { categoryPolicy } from "@/modules/ecommerce/niche/policy";
-import { reserveFoodSlot } from "@/modules/ecommerce/niche/food";
 import { eligibleStockWhere, expiryOrderedStocks } from "@/modules/ecommerce/inventory/stock-policy";
 import prisma, { type Prisma } from "@db/server";
 import type { CheckoutInput, OrderLookupQuery } from "../dto/order.dto";
@@ -390,8 +389,6 @@ export const orderService = {
               imageUrl: line.imageUrl,
               attributesSnapshot: line.attributesSnapshot,
               fulfillmentKind: line.fulfillmentKind,
-              serialTracking: line.serialTracking,
-              warrantyDays: line.warrantyDays,
               quantity: line.quantity,
               unitPrice: line.unitPrice.toFixed(2),
               discountAmount: "0.00",
@@ -414,7 +411,6 @@ export const orderService = {
         },
       });
 
-      await reserveFoodSlot(tx, { orderId: created.id, slotId: input.foodSlotId, postalCode: shippingAddress.postalCode, quantity: lines.filter(line => line.fulfillmentKind === "fresh_food").reduce((sum, line) => sum + line.quantity, 0) });
       for (const line of lines) {
         await reserveLineStock(tx, {
           orderId: created.id,

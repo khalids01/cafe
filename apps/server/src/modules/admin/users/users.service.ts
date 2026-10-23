@@ -33,9 +33,6 @@ const adminUserSelect = {
   banned: true,
   banReason: true,
   archived: true,
-  onboardingComplete: true,
-  plan: true,
-  subscriptionStatus: true,
   accounts: {
     select: { providerId: true },
   },

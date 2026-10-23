@@ -77,8 +77,7 @@ export const ecommerceApi = {
       unwrap(api.admin.products({ id }).validate.post(), "Failed to validate product"),
   },
   inventory: {
-    units: (variantId: string) => unwrap(api.admin.inventory.units.get({ query: { variantId } }), "Failed to load units"),
-    registerUnit: (body: { variantId: string; locationId: string; batchId?: string | null; serial?: string | null; imei?: string | null }) => unwrap(api.admin.inventory.units.post(body), "Failed to register unit"),
+
     batchDisposition: (id: string, body: { disposition: "sellable" | "quarantined" | "unsafe"; reason: string }) => unwrap(api.admin.inventory.batches({ id }).disposition.patch(body), "Failed to record inspection"),
     suppliers: (query?: Record<string, unknown>) =>
       unwrap(api.admin.inventory.suppliers.get({ query }), "Failed to load suppliers"),
@@ -119,80 +118,6 @@ export const ecommerceApi = {
     deleteRate: (id: string) =>
       unwrap(api.admin.shipping.rates({ id }).delete(), "Failed to delete shipping method"),
   },
-  delivery: {
-    reconcileBooking: (id: string, body: { invoice: string; externalId: string; trackingCode?: string | null; providerState: string; note: string }) => unwrap(api.admin.delivery.consignments({ id })["reconcile-booking"].post(body), "Failed to reconcile booking evidence"),
-    retryHold: (id: string, note: string) => unwrap(api.admin.delivery.consignments({ id })["retry-hold"].post({ note }), "Failed to retry reviewed hold"),
-    providers: () =>
-      unwrap(api.admin.delivery.providers.get(), "Failed to load courier providers"),
-    connections: (query?: Record<string, unknown>) =>
-      unwrap(api.admin.delivery.connections.get({ query }), "Failed to load courier connections"),
-    createConnection: (body: Record<string, unknown>) =>
-      unwrap(api.admin.delivery.connections.post(body as any), "Failed to create courier connection"),
-    updateConnection: (id: string, body: Record<string, unknown>) =>
-      unwrap(api.admin.delivery.connections({ id }).patch(body as any), "Failed to update courier connection"),
-    testConnection: (id: string) =>
-      unwrap(api.admin.delivery.connections({ id }).test.post(), "Failed to test courier connection"),
-    enableConnection: (id: string) =>
-      unwrap(api.admin.delivery.connections({ id }).enable.post(), "Failed to enable courier connection"),
-    disableConnection: (id: string) =>
-      unwrap(api.admin.delivery.connections({ id }).disable.post(), "Failed to disable courier connection"),
-    archiveConnection: (id: string) =>
-      unwrap(api.admin.delivery.connections({ id }).archive.post(), "Failed to archive courier connection"),
-    restoreConnection: (id: string) =>
-      unwrap(api.admin.delivery.connections({ id }).restore.post(), "Failed to restore courier connection"),
-    deleteConnection: (id: string) =>
-      unwrap(api.admin.delivery.connections({ id }).delete(), "Failed to delete courier connection"),
-    services: (query?: Record<string, unknown>) =>
-      unwrap(api.admin.delivery.services.get({ query }), "Failed to load courier services"),
-    createService: (body: Record<string, unknown>) =>
-      unwrap(api.admin.delivery.services.post(body as any), "Failed to create courier service"),
-    updateService: (id: string, body: Record<string, unknown>) =>
-      unwrap(api.admin.delivery.services({ id }).patch(body as any), "Failed to update courier service"),
-    archiveService: (id: string) =>
-      unwrap(api.admin.delivery.services({ id }).archive.post(), "Failed to archive delivery option"),
-    restoreService: (id: string) =>
-      unwrap(api.admin.delivery.services({ id }).restore.post(), "Failed to restore delivery option"),
-    deleteService: (id: string) =>
-      unwrap(api.admin.delivery.services({ id }).delete(), "Failed to delete delivery option"),
-    rules: (query?: Record<string, unknown>) =>
-      unwrap(api.admin.delivery["routing-rules"].get({ query }), "Failed to load courier routing rules"),
-    createRule: (body: Record<string, unknown>) =>
-      unwrap(api.admin.delivery["routing-rules"].post(body as any), "Failed to create courier routing rule"),
-    updateRule: (id: string, body: Record<string, unknown>) =>
-      unwrap(api.admin.delivery["routing-rules"]({ id }).patch(body as any), "Failed to update courier routing rule"),
-    archiveRule: (id: string) =>
-      unwrap(api.admin.delivery["routing-rules"]({ id }).archive.post(), "Failed to archive assignment rule"),
-    restoreRule: (id: string) =>
-      unwrap(api.admin.delivery["routing-rules"]({ id }).restore.post(), "Failed to restore assignment rule"),
-    deleteRule: (id: string) =>
-      unwrap(api.admin.delivery["routing-rules"]({ id }).delete(), "Failed to delete assignment rule"),
-    dispatches: () =>
-      unwrap(api.admin.delivery.dispatches.get(), "Failed to load courier dispatches"),
-    recommendation: (orderId: string) =>
-      unwrap(api.admin.delivery.orders({ orderId }).recommendation.get(), "Failed to calculate courier recommendation"),
-    tracking: (orderId: string) =>
-      unwrap(api.admin.delivery.orders({ orderId }).tracking.get(), "Failed to load courier tracking"),
-    confirmRoute: (orderId: string, body: Record<string, unknown>) =>
-      unwrap(api.admin.delivery.orders({ orderId }).confirm.post(body as any), "Failed to confirm courier route"),
-    queueDispatch: (id: string) =>
-      unwrap(api.admin.delivery.dispatches({ id }).queue.post(), "Failed to queue courier dispatch"),
-    markHandoff: (id: string, body: Record<string, unknown>) =>
-      unwrap(api.admin.delivery.consignments({ id }).handoff.post(body as any), "Failed to update courier handoff"),
-    requestPickup: (id: string, body: Record<string, unknown>) =>
-      unwrap(api.admin.delivery.consignments({ id }).pickup.post(body as any), "Failed to request courier pickup"),
-    returns: () =>
-      unwrap(api.admin.delivery.returns.get(), "Failed to load courier returns"),
-    createReturn: (body: Record<string, unknown>) =>
-      unwrap(api.admin.delivery.returns.post(body as any), "Failed to create courier return"),
-    updateReturn: (id: string, body: Record<string, unknown>) =>
-      unwrap(api.admin.delivery.returns({ id }).patch(body as any), "Failed to update courier return"),
-    submitReturn: (id: string) =>
-      unwrap(api.admin.delivery.returns({ id }).submit.post(), "Failed to submit courier return"),
-    settlements: () =>
-      unwrap(api.admin.delivery.settlements.get(), "Failed to load courier settlements"),
-    recordSettlement: (body: Record<string, unknown>) =>
-      unwrap(api.admin.delivery.settlements.post(body as any), "Failed to record courier settlement"),
-  },
   discounts: {
     list: (query?: Record<string, unknown>) =>
       unwrap(api.admin.discounts.get({ query }), "Failed to load discounts"),
@@ -222,14 +147,7 @@ export const ecommerceApi = {
       unwrap(api.admin.customers({ id }).patch(body), "Failed to update customer"),
   },
   orders: {
-    unassignUnit: (id: string, unitId: string) => unwrap(api.admin.orders({ id }).units({ unitId }).delete(), "Failed to unassign unit"),
-    foodSlots: () => unwrap(api.admin.orders["food-slots"].get(), "Failed to load slots"),
-    createFoodSlot: (body: { label: string; postalCodes: string[]; startsAt: string; endsAt: string; cutoffAt: string; capacityUnits: number }) => unwrap(api.admin.orders["food-slots"].post(body), "Failed to create slot"),
-    disableFoodSlot: (id: string) => unwrap(api.admin.orders["food-slots"]({ id }).delete(), "Failed to close slot"),
-    preparation: (id: string, state: "preparing" | "ready", note: string) => unwrap(api.admin.orders({ id }).preparation.post({ state, note }), "Failed to record preparation"),
-    assignUnit: (id: string, lineItemId: string, unitId: string) => unwrap(api.admin.orders({ id }).units.post({ lineItemId, unitId }), "Failed to assign unit"),
-    openWarranty: (id: string, allocationId: string, reference: string, issue: string) => unwrap(api.admin.orders({ id })["warranty-claims"].post({ allocationId, reference, issue }), "Failed to open claim"),
-    resolveWarranty: (id: string, claimId: string, state: "approved" | "rejected", resolution: string) => unwrap(api.admin.orders({ id })["warranty-claims"]({ claimId }).patch({ state, resolution }), "Failed to resolve claim"),
+
     list: (query?: Record<string, unknown>) =>
       unwrap(api.admin.orders.get({ query }), "Failed to load orders"),
     detail: (id: string) =>
@@ -240,8 +158,6 @@ export const ecommerceApi = {
       unwrap(api.admin.orders({ id }).status.patch(body), "Failed to update order statuses"),
     markShipped: (id: string, body: Record<string, unknown>) =>
       unwrap(api.admin.orders({ id }).ship.post(body), "Failed to mark order shipped"),
-    updateTracking: (id: string, body: Record<string, unknown>) =>
-      unwrap(api.admin.orders({ id }).tracking.patch(body), "Failed to update tracking"),
     markDelivered: (id: string, body: Record<string, unknown>) =>
       unwrap(api.admin.orders({ id }).delivered.post(body), "Failed to mark order delivered"),
     cancel: (id: string, body: Record<string, unknown>) =>

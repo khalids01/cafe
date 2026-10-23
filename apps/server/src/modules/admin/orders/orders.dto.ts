@@ -99,14 +99,6 @@ export const UpdateOrderDto = t.Object({
 });
 
 export const MarkOrderShippedDto = t.Object({
-  carrier: t.String({ minLength: 1, maxLength: 120 }),
-  trackingNumber: t.String({ minLength: 1, maxLength: 200 }),
-  note: t.Optional(t.Union([t.String({ maxLength: 2000 }), t.Null()])),
-});
-
-export const UpdateOrderTrackingDto = t.Object({
-  carrier: t.Optional(t.String({ minLength: 1, maxLength: 120 })),
-  trackingNumber: t.Optional(t.String({ minLength: 1, maxLength: 200 })),
   note: t.Optional(t.Union([t.String({ maxLength: 2000 }), t.Null()])),
 });
 
@@ -142,7 +134,6 @@ export type ListOrdersQuery = typeof ListOrdersQueryDto.static;
 export type UpdateOrderStatusesInput = typeof UpdateOrderStatusesDto.static;
 export type UpdateOrderInput = typeof UpdateOrderDto.static;
 export type MarkOrderShippedInput = typeof MarkOrderShippedDto.static;
-export type UpdateOrderTrackingInput = typeof UpdateOrderTrackingDto.static;
 export type MarkOrderDeliveredInput = typeof MarkOrderDeliveredDto.static;
 export type CancelOrderInput = typeof CancelOrderDto.static;
 export type RecordOrderRefundInput = typeof RecordOrderRefundDto.static;
@@ -159,12 +150,3 @@ export const RecordOrderPaymentDto = t.Object({
 export const ReverseOrderPaymentDto = t.Object({ note: t.String({ minLength: 1, maxLength: 2000 }) });
 export const PaymentIdParamDto = t.Object({ id: t.String({ minLength: 1 }), paymentId: t.String({ minLength: 1 }) });
 export type RecordOrderPaymentInput = typeof RecordOrderPaymentDto.static;
-
-export const FoodSlotDto = t.Object({ label: t.String({ minLength: 1, maxLength: 120 }), postalCodes: t.Array(t.String({ minLength: 1, maxLength: 32 }), { minItems: 1, maxItems: 100 }), startsAt: t.String({ format: "date-time" }), endsAt: t.String({ format: "date-time" }), cutoffAt: t.String({ format: "date-time" }), capacityUnits: t.Integer({ minimum: 1, maximum: 10000 }) });
-export const PreparationDto = t.Object({ state: t.Union([t.Literal("preparing"), t.Literal("ready")]), note: t.String({ minLength: 1, maxLength: 2000 }) });
-export const AssignUnitDto = t.Object({ lineItemId: t.String({ minLength: 1, maxLength: 128 }), unitId: t.String({ minLength: 1, maxLength: 128 }) });
-export const OpenWarrantyClaimDto = t.Object({ allocationId: t.String({ minLength: 1, maxLength: 128 }), reference: t.String({ minLength: 1, maxLength: 128 }), issue: t.String({ minLength: 1, maxLength: 2000 }) });
-export const ResolveWarrantyClaimDto = t.Object({ state: t.Union([t.Literal("approved"), t.Literal("rejected")]), resolution: t.String({ minLength: 1, maxLength: 2000 }) });
-export const ClaimParamDto = t.Object({ id: t.String({ minLength: 1, maxLength: 128 }), claimId: t.String({ minLength: 1, maxLength: 128 }) });
-
-export const UnitParamDto = t.Object({ id: t.String({ minLength: 1, maxLength: 128 }), unitId: t.String({ minLength: 1, maxLength: 128 }) });

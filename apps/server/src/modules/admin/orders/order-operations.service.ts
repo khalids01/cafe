@@ -1,7 +1,5 @@
-import { cancelFoodBooking } from "../../ecommerce/niche/food";
 import { orderHasUnsafeCommittedStock } from "../../ecommerce/inventory/stock-policy";
 import { orderMoney, moneyStatus, minorUnitsString } from "../../ecommerce/orders/payment-accounting";
-import { invalidatePaymentDispatches } from "../../ecommerce/orders/payment-dispatch";
 import type {
   CancelOrderInput,
   RecordOrderRefundInput,
@@ -12,7 +10,7 @@ import {
   restockCommittedReservations,
   withOrderTransaction,
 } from "./orders.service";
-import { orderNeedsPhysicalRecovery, stopUnsubmittedDispatches } from "./order-custody";
+import { orderNeedsPhysicalRecovery } from "./order-custody";
 import { restockReceivedOrder } from "./order-recovery.service";
 
 type OrdersActor = {
@@ -68,9 +66,7 @@ export const orderOperationsService = {
         throw new AdminOrdersServiceError("A delivered order cannot be cancelled", 409);
       }
 
-      const courier = await stopUnsubmittedDispatches(tx, id, actor.userId);
-      const preparedFood = await cancelFoodBooking(tx, id);
-      const physicalRecoveryRequired = preparedFood || await orderNeedsPhysicalRecovery(tx, current, courier.recoveryRequired);
+      const physicalRecoveryRequired = ["preparing", "ready_to_ship"].includes(current.deliveryStatus) || await orderNeedsPhysicalRecovery(tx, current);
       const expiredInventory = current.inventoryStatus === "committed" && await orderHasUnsafeCommittedStock(tx, id);
       const recoveryRequired = physicalRecoveryRequired || expiredInventory || (current.inventoryStatus === "committed" && !actor.canRestock);
 
@@ -209,7 +205,6 @@ export const orderOperationsService = {
           },
         });
 
-        await invalidatePaymentDispatches(tx, id, actor.userId);
         return {
           id: refund.id,
           orderId: id,

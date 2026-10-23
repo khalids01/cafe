@@ -11,8 +11,6 @@ import { startVisitorFlushWorker, stopVisitorFlushWorker } from "./modules/visit
 import { securityHeadersPlugin } from "./plugins/security-headers";
 import { cookieRequestOriginPlugin } from "./plugins/cookie-request-origin";
 import { e2eRuntimeConfig, brandKey } from "@config";
-import { startCourierDispatchWorker, stopCourierDispatchWorker } from "./modules/delivery/dispatch-worker";
-import { startCourierTrackingWorker, stopCourierTrackingWorker } from "./modules/delivery/tracking-worker";
 
 const shouldLogRequests = env.NODE_ENV === "development";
 const port = Number.parseInt(
@@ -36,8 +34,6 @@ const docsPlugin =
 await connectRedis();
 console.log("Redis is ready");
 startVisitorFlushWorker();
-startCourierDispatchWorker();
-startCourierTrackingWorker();
 
 const server = new Elysia()
   .use(securityHeadersPlugin({ production: env.NODE_ENV === "production" }))
@@ -92,7 +88,7 @@ async function shutdown() {
   try {
     await Promise.all([
       server.server?.stop(false),
-      stopCourierDispatchWorker(), stopCourierTrackingWorker(), stopVisitorFlushWorker(),
+      stopVisitorFlushWorker(),
     ]);
     await prisma.$disconnect();
     await disconnectRedis();

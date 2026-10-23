@@ -102,7 +102,7 @@ export function AdminWebhooksPage() {
             Webhooks
           </h1>
           <p className="text-sm text-muted-foreground">
-            Polar webhook delivery processing, retries, and failures.
+            Integration event processing, retries, and failures.
           </p>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row">
@@ -244,4 +244,3 @@ function formatDate(value: string) {
     timeStyle: "short",
   }).format(new Date(value));
 }
-

@@ -52,7 +52,6 @@ In **Settings → Secrets and variables → Actions → Variables**, configure:
 | --- | --- | --- |
 | `BRAND` | `foodshop` | Yes: `foodshop`, `bestsky` or `airshop` |
 | `VITE_SERVER_URL` | `https://api.shop.example.com` | Yes |
-| `VITE_ENABLE_POLAR` | `false` | Defaults to false |
 | `AUTH_SESSION_COOKIE_NAME` | `better-auth.session_token` | Defaults to this value |
 
 Replace example domains with your actual domains. These values are public web build configuration. Changing the browser configuration requires rebuilding the web image; changing Dokploy env alone will not rewrite its browser bundle. Keep the corresponding Dokploy values equal to the values used to build the selected image.
@@ -145,7 +144,6 @@ Example service environment (replace placeholders):
 BRAND=foodshop
 IMAGE_TAG=sha-REPLACE_WITH_FULL_PUBLISHED_COMMIT
 VITE_SERVER_URL=https://api.shop.example.com
-VITE_ENABLE_POLAR=false
 AUTH_SESSION_COOKIE_NAME=better-auth.session_token
 
 DATABASE_URL=postgresql://SHOP_USER:URL_ENCODED_PASSWORD@POSTGRES_SERVICE:5432/SHOP_DATABASE
@@ -158,15 +156,11 @@ GITHUB_CLIENT_ID=REPLACE_ME
 GITHUB_CLIENT_SECRET=REPLACE_ME
 GOOGLE_CLIENT_ID=REPLACE_ME
 GOOGLE_CLIENT_SECRET=REPLACE_ME
-ENABLE_POLAR=false
-COURIER_WORKERS_ENABLED=false
 ```
 
 Generate an auth secret locally with `openssl rand -hex 32`. Never reuse the example placeholders.
 
-Compose fixes `NODE_ENV=production`, `E2E_MODE=false`, API port 3000 and web port 3001. Leave `VITE_PORT` out of the service env. Optional server variables are defined in `packages/env/src/env.server.ts`: SMTP, file server, cookie domain, Polar and courier credentials/encryption keys. Set `AUTH_COOKIE_DOMAIN` to the appropriate parent domain only when the auth flow needs a shared cookie across web/API subdomains. Configure provider callback URLs for the public API domain and verify sign-in after deployment.
-
-Courier workers default to disabled in the example until you intentionally enable them with the proper provider credentials. If enabling Polar, supply its required server variables and rebuild the web image with `VITE_ENABLE_POLAR=true`.
+Compose fixes `NODE_ENV=production`, `E2E_MODE=false`, API port 3000 and web port 3001. Leave `VITE_PORT` out of the service env. Optional server variables are defined in `packages/env/src/env.server.ts`: SMTP, file server, cookie domain. Set `AUTH_COOKIE_DOMAIN` to the appropriate parent domain only when the auth flow needs a shared cookie across web/API subdomains. Configure provider callback URLs for the public API domain and verify sign-in after deployment.
 
 ## 6. Domains and first deployment
 
@@ -206,7 +200,7 @@ For rollback: set `IMAGE_TAG` to the previous known-good SHA tag and deploy. Con
 - **Manifest unknown:** confirm both brand/SHA tags exist. Never deploy while publication is incomplete.
 - **Brand mismatch:** use the image built for the configured `BRAND`.
 - **Browser still calls the previous API URL:** rebuild the web image with the correct `VITE_SERVER_URL`, then deploy that new tag.
-- **API exits on environment validation:** complete the required variables, including OAuth credentials, and leave Polar disabled until configured.
+- **API exits on environment validation:** complete the required variables, including OAuth credentials.
 - **Database connection fails:** use reachable internal service names and confirm credentials/network membership and schema prerequisites.
 - **Missing dokploy-network:** confirm Dokploy's network exists on the deployment server before deploying this Compose file.
 

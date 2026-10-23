@@ -70,9 +70,7 @@ export type CategoryAttribute = {
 };
 
 export type Category = {
-  fulfillmentKind?: "standard" | "packaged_food" | "fresh_food" | "gadget" | "clothing";
-  serialTracking?: "none" | "serial" | "imei" | "serial_and_imei";
-  warrantyDays?: number;
+  fulfillmentKind?: "standard" | "packaged_food" | "fresh_food";
   id: string;
   name: string;
   slug: string;
@@ -266,15 +264,10 @@ export type OrderAddress = {
   notes?: string | null;
 } | null;
 
-export type TrackedUnit = { id: string; serial: string | null; imei: string | null; state: string };
 export type UnitAllocation = { id: string; state: string; unit: TrackedUnit; claims: { id: string; state: string; issue: string; resolution: string | null }[] };
 export type FoodSlot = { id: string; label: string; postalCodes: string[]; startsAt: string; endsAt: string; cutoffAt: string; capacityUnits: number; reservedUnits: number; isActive: boolean };
 export type OrderLineItem = {
-  fulfillmentKind?: "standard" | "packaged_food" | "fresh_food" | "gadget" | "clothing";
-  serialTracking?: "none" | "serial" | "imei" | "serial_and_imei";
-  warrantyDays?: number;
-  units?: TrackedUnit[];
-  unitAllocations?: UnitAllocation[];
+  fulfillmentKind?: "standard" | "packaged_food" | "fresh_food";
   id: string;
   orderId: string;
   productId?: string | null;
@@ -336,7 +329,6 @@ export type OrderRecovery = {
 };
 
 export type Order = {
-  foodBooking?: { state: string; quantity: number; slot: FoodSlot } | null;
   id: string;
   orderNumber: string;
   userId?: string | null;
@@ -369,8 +361,6 @@ export type Order = {
   shippingRateId?: string | null;
   shippingMethodCode?: string | null;
   shippingMethodLabel?: string | null;
-  carrier?: string | null;
-  trackingNumber?: string | null;
   fulfillmentNote?: string | null;
   shippedAt?: string | null;
   deliveredAt?: string | null;
@@ -383,7 +373,7 @@ export type Order = {
   lineItems?: OrderLineItem[];
   statusEvents?: OrderStatusEvent[];
   refunds?: OrderRefund[];
-  payments?: { id: string; entryType: "receipt" | "reversal"; amount: string; currency: string; method: PaymentMethod; reference: string | null; note: string | null; reversesId?: string | null; settlementId?: string | null; receivedAt: string; actorUserId: string }[];
+  payments?: { id: string; entryType: "receipt" | "reversal"; amount: string; currency: string; method: PaymentMethod; reference: string | null; note: string | null; reversesId?: string | null; receivedAt: string; actorUserId: string }[];
   money?: { received: string | null; refunded: string | null; outstanding: string | null; netReceived: string | null; error: string | null };
   recovery?: OrderRecovery | null;
 };
@@ -401,109 +391,6 @@ export type ShippingRate = {
   archivedAt?: string | null;
   createdAt: string;
   updatedAt: string;
-};
-
-export type CourierProvider = {
-  id: string;
-  code: string;
-  displayName: string;
-  capabilities: string[];
-  environmentConfigurationAvailable: boolean;
-};
-
-export type CourierConnection = {
-  id: string;
-  publicId: string;
-  displayName: string;
-  provider: CourierProvider;
-  enabled: boolean;
-  environment: "production" | "sandbox";
-  priority: number;
-  credentialSource: "server_environment" | "encrypted_database";
-  hasStoredCredentials: boolean;
-  healthState: "unchecked" | "healthy" | "degraded" | "auth_failed";
-  archivedAt?: string | null;
-  updatedAt: string;
-};
-
-export type CourierService = {
-  id: string;
-  connectionId: string;
-  connectionName: string;
-  providerName: string;
-  code: string;
-  displayName: string;
-  enabled: boolean;
-  archivedAt?: string | null;
-  shippingMethods: Array<{ id: string; code: string; label: string }>;
-  updatedAt: string;
-};
-
-export type CourierRoutingRule = {
-  id: string;
-  name: string;
-  version: number;
-  priority: number;
-  enabled: boolean;
-  archivedAt?: string | null;
-  conditions: Record<string, unknown>;
-  connectionId: string;
-  connectionName: string;
-  providerName: string;
-  serviceId: string;
-  serviceName: string;
-  updatedAt: string;
-};
-
-export type CourierRouteRecommendation = {
-  orderId: string;
-  orderNumber: string;
-  request: { shippingMethodId: string; paymentKind: "cod" | "prepaid"; outstandingCodAmount: number };
-  payloadPreview: { invoice: string; recipientName: string; recipientPhone?: string | null; recipientAddress?: string | null; codAmount: string; currency: string };
-  candidates: Array<{ connectionId: string; serviceId: string; ruleId: string; ruleVersion: number; reason: string }>;
-  warnings: string[];
-  evaluatedRules: Array<{ id: string; version: number }>;
-};
-
-export type CourierTracking = {
-  canReconcileBooking?: boolean;
-  canRetryHold?: boolean;
-  operation?: { state: string; attemptCount: number; lastErrorCode: string | null; nextAttemptAt: string | null } | null;
-  id: string;
-  connectionName: string;
-  providerName: string;
-  serviceName: string;
-  invoice: string;
-  trackingCode?: string | null;
-  trackingUrl?: string | null;
-  state: string;
-  providerState?: string | null;
-  submittedAt?: string | null;
-  deliveredAt?: string | null;
-  events: Array<{ id: string; source: string; eventType: string; providerState?: string | null; normalizedState?: string | null; occurredAt?: string | null; createdAt: string }>;
-  exceptions: Array<{ id: string; kind: string; state: string; createdAt: string }>;
-};
-
-export type CourierReturn = {
-  id: string;
-  consignmentId: string;
-  externalId?: string | null;
-  providerState?: string | null;
-  state: string;
-  reason?: string | null;
-  createdAt: string;
-  consignment: { order: { orderNumber: string }; connection: { displayName: string; provider: { displayName: string } }; service: { displayName: string } };
-};
-
-export type CourierSettlement = {
-  id: string;
-  consignmentId: string;
-  externalId: string;
-  amount: string;
-  currency: string;
-  state: string;
-  createdAt: string;
-  consignment: { order: { orderNumber: string; paymentStatus: string }; connection: { displayName: string; provider: { displayName: string } }; service: { displayName: string } };
 };
 
 export type DiscountCode = {

@@ -1,10 +1,7 @@
 import { listSeoProducts } from "../ecommerce/page-seo/catalog-seo.service";
 import { SeoPageParams } from "../ecommerce/page-seo/page-seo.dto";
 import { pageSeoService } from "../ecommerce/page-seo/page-seo.service";
-import prisma from "@db/server";
 import { NichePolicyError } from "../ecommerce/niche/policy";
-import { openWarrantyClaim } from "../ecommerce/niche/gadgets";
-import { OpenWarrantyClaimDto } from "../admin/orders/orders.dto";
 import { Elysia, t } from "elysia";
 import { authGuard } from "@/guards/auth.guard";
 import {
@@ -55,15 +52,6 @@ export const shopController = new Elysia({
   .use(authGuard)
   .get("/seo-products", ({ query }) => listSeoProducts(query.cursor), { query: t.Object({ cursor: t.Optional(t.String({ minLength: 1, maxLength: 160 })) }) })
   .get("/page-seo/:page", async ({ params }) => ({ seo: await pageSeoService.public(params.page) }), { params: SeoPageParams })
-  .get("/food-slots", async ({ query }) => {
-    const now = new Date();
-    const slots = await prisma.foodDeliverySlot.findMany({ where: { isActive: true, cutoffAt: { gt: now }, endsAt: { gt: now }, ...(query.postalCode ? { postalCodes: { has: query.postalCode.trim().toUpperCase() } } : {}) }, orderBy: { startsAt: "asc" }, take: 100 });
-    return slots.map(slot => ({ id: slot.id, label: slot.label, postalCodes: slot.postalCodes, startsAt: slot.startsAt.toISOString(), endsAt: slot.endsAt.toISOString(), cutoffAt: slot.cutoffAt.toISOString(), availableUnits: Math.max(0, slot.capacityUnits - slot.reservedUnits) }));
-  }, { query: t.Object({ postalCode: t.Optional(t.String({ maxLength: 32 })) }) })
-  .post("/warranty-claims", async ({ body, userId, set }) => {
-    try { const actor = requireUserId(userId); return await prisma.$transaction(tx => openWarrantyClaim(tx, body, actor, actor), { isolationLevel: "Serializable" }); }
-    catch (e) { if (["P2002", "P2034"].includes(String((e as { code?: string }).code))) { set.status = 409; return { message: "Claim changed; reload", status: 409 }; } return handleShopError(e, set); }
-  }, { body: OpenWarrantyClaimDto })
   .get("/settings", async () => {
     const settings = await storeSettingsService.get();
     return storeSettingsService.publicSettings(settings);

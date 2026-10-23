@@ -19,7 +19,6 @@ const names = [
   "inventoryStock",
   "inventoryMovement",
   "inventoryBatch",
-  "inventoryUnit",
 ];
 const tx: any = { $queryRaw: mock(async () => []) };
 for (const name of names)
@@ -89,7 +88,6 @@ for (const dependency of [
   "inventoryStock",
   "inventoryMovement",
   "inventoryBatch",
-  "inventoryUnit",
   "stockReservation",
 ]) {
   test(`product deletion preserves ${dependency}`, async () => {

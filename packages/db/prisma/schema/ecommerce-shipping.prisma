@@ -17,7 +17,6 @@ model ShippingRate {
   updatedAt      DateTime @updatedAt
 
   orders Order[]
-  courierServices CourierServiceMethod[]
 
   @@index([isActive])
   @@index([isDefault])

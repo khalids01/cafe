@@ -50,8 +50,7 @@ export type ShopVariant = {
 export type ShopProduct = {
   seoTitle?: string | null;
   seoDescription?: string | null;
-  fulfillmentKind?: "standard" | "packaged_food" | "fresh_food" | "gadget" | "clothing";
-  warrantyDays?: number;
+  fulfillmentKind?: "standard" | "packaged_food" | "fresh_food";
   id: string;
   name: string;
   slug: string;
@@ -172,7 +171,6 @@ export type ShopOrder = {
   money?: { received: string | null; refunded: string | null; outstanding: string | null; netReceived: string | null; error: string | null };
   shippingAddress?: { fullName?: string; line1: string; line2?: string | null; city?: string | null; state?: string | null; postalCode?: string | null; country?: string | null } | null;
   statusEvents?: { id: string; type: string; newValue: string; createdAt: string }[];
-  foodBooking?: { state: string; slot: { label: string; startsAt: string; endsAt: string } } | null;
   id: string;
   orderNumber: string;
   customerName: string;
@@ -192,8 +190,6 @@ export type ShopOrder = {
   deliveryStatus: string;
   inventoryStatus: string;
   shippingMethodLabel?: string | null;
-  carrier?: string | null;
-  trackingNumber?: string | null;
   shippedAt?: string | null;
   deliveredAt?: string | null;
   placedAt?: string | null;
@@ -206,8 +202,6 @@ export type ShopOrder = {
     variantName?: string | null;
     sku?: string | null;
     imageUrl?: string | null;
-    warrantyDays?: number;
-    unitAllocations?: { id: string; serial: string | null; imei: string | null; state: string; claims: { id: string; state: string; issue: string; resolution: string | null }[] }[];
     quantity: number;
     unitPrice: string;
     totalAmount: string;

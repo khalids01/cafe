@@ -12,10 +12,6 @@ export const env = createEnv({
   },
   client: {
     VITE_SERVER_URL: z.url(),
-    VITE_ENABLE_POLAR: z
-      .string()
-      .default("true")
-      .transform((val) => val === "true"),
   },
   runtimeEnv: {
     ...(process as any).env,

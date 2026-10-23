@@ -162,10 +162,8 @@ export const shippingService = {
     const existing = await prisma.shippingRate.findUnique({ where: { id } });
     if (!existing) throw new ShippingServiceError("Shipping method not found", 404);
     if (existing.archivedAt) throw new ShippingServiceError("Shipping method is already archived", 409);
-    const mappings = await prisma.courierServiceMethod.count({ where: { shippingRateId: id, service: { archivedAt: null } } });
     const dependencies = [
       ...(existing.isDefault ? [{ type: "default_shipping_method", count: 1, action: "Choose another active default shipping method first" }] : []),
-      ...(mappings ? [{ type: "delivery_options", count: mappings, action: "Remove this shipping method from current delivery options first" }] : []),
     ];
     if (dependencies.length) {
       await activityService.record({ type: "shipping.rate.archive_blocked", actorUserId, severity: "warning", message: `Blocked archive of shipping method ${existing.label}`, metadata: { shippingRateId: id, dependencies } });
@@ -189,13 +187,9 @@ export const shippingService = {
     const existing = await prisma.shippingRate.findUnique({ where: { id } });
     if (!existing) throw new ShippingServiceError("Shipping method not found", 404);
     if (!existing.archivedAt) throw new ShippingServiceError("Archive the shipping method before deleting it permanently", 409, "ARCHIVE_REQUIRED");
-    const [orders, mappings] = await Promise.all([
-      prisma.order.count({ where: { shippingRateId: id } }),
-      prisma.courierServiceMethod.count({ where: { shippingRateId: id } }),
-    ]);
+    const orders = await prisma.order.count({ where: { shippingRateId: id } });
     const dependencies = [
       { type: "orders", count: orders, action: "Historical orders must retain their shipping method" },
-      { type: "delivery_options", count: mappings, action: "Remove this shipping method from delivery options first" },
     ].filter((item) => item.count > 0);
     if (dependencies.length) {
       await activityService.record({ type: "shipping.rate.delete_blocked", actorUserId, severity: "warning", message: `Blocked permanent deletion of shipping method ${existing.label}`, metadata: { shippingRateId: id, dependencies } });

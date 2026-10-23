@@ -1,7 +1,7 @@
 import { readdir } from "node:fs/promises";
 import { resolve } from "node:path";
 const root = resolve(process.env.WEB_BUILD_DIR ?? "apps/web/dist", "client");
-const keys = ["DATABASE_URL", "REDIS_URL", "BETTER_AUTH_SECRET", "GITHUB_CLIENT_SECRET", "GOOGLE_CLIENT_SECRET", "POLAR_ACCESS_TOKEN", "POLAR_WEBHOOK_SECRET", "EMAIL_PASSWORD", "FILE_SERVER_API_KEY", "STEAD_FAST_API_KEY", "STEAD_FAST_SECRET_KEY", "STEAD_FAST_WEBHOOK_TOKEN", "COURIER_CREDENTIAL_ENCRYPTION_KEYS"];
+const keys = ["DATABASE_URL", "REDIS_URL", "BETTER_AUTH_SECRET", "GITHUB_CLIENT_SECRET", "GOOGLE_CLIENT_SECRET", "EMAIL_PASSWORD", "FILE_SERVER_API_KEY", ];
 const values = keys.flatMap((key) => {
   const value = process.env[key];
   return value && value.length >= 8 ? [{ key, value }] : [];

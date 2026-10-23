@@ -46,8 +46,6 @@ export function CategoryManagementSection() {
         imageUrl: draft.imageUrl || null,
         parentId: draft.parentId === "none" ? null : draft.parentId,
         fulfillmentKind: draft.fulfillmentKind,
-        serialTracking: draft.fulfillmentKind === "gadget" ? draft.serialTracking : "none",
-        warrantyDays: draft.fulfillmentKind === "gadget" ? Number(draft.warrantyDays || 0) : 0,
         brandPolicy: draft.brandPolicy,
         showStoreBrand: draft.showStoreBrand,
         isActive: draft.isActive,

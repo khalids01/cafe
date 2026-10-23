@@ -128,7 +128,7 @@ function AcceptInvitationPage() {
           message: String((error.value as any)?.message ?? "Failed to accept invitation."),
         } satisfies ApiError;
       }
-      return data as { success: true; redirectTo: "/onboarding" | "/dashboard" };
+      return data as { success: true; redirectTo: "/dashboard" };
     },
     onSuccess: (data) => {
       window.location.assign(data.redirectTo);

@@ -16,7 +16,6 @@ model User {
   archived         Boolean          @default(false)
 
   invitations             Invitation[]
-  onboardingComplete      Boolean                      @default(false)
   notifications           Notification[]
   feedbacks               Feedback[]
   actedActivityEvents     ActivityEvent[]              @relation("ActivityEventActor")
@@ -28,12 +27,6 @@ model User {
   orderRefunds            OrderRefund[]                @relation("OrderRefundActor")
   rbacRoles               RbacUserRole[]
   rbacPermissionOverrides RbacUserPermissionOverride[]
-
-  // Polar Integration
-  polarCustomerId    String?
-  subscriptionId     String?
-  plan               String  @default("free")
-  subscriptionStatus String?
 
   @@unique([email])
   @@index([createdAt])

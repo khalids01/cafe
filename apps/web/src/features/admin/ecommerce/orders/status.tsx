@@ -26,7 +26,7 @@ export const orderStatusMeta = {
       "bg-slate-100 text-slate-700 dark:bg-slate-900/50 dark:text-slate-200",
   },
   confirmed: {
-    label: "Confirmed",
+    label: "Accepted",
     className: "bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-200",
   },
   processing: {
@@ -79,7 +79,7 @@ export const paymentStatusMeta = {
 
 export const deliveryStatusMeta = {
   unfulfilled: {
-    label: "Unfulfilled",
+    label: "Placed",
     className: "bg-zinc-100 text-zinc-700 dark:bg-zinc-900 dark:text-zinc-200",
   },
   preparing: {
@@ -87,11 +87,11 @@ export const deliveryStatusMeta = {
     className: "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-200",
   },
   ready_to_ship: {
-    label: "Ready to ship",
+    label: "Ready",
     className: "bg-teal-100 text-teal-700 dark:bg-teal-950 dark:text-teal-200",
   },
   shipped: {
-    label: "Shipped",
+    label: "Out for delivery",
     className:
       "bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-200",
   },
@@ -296,8 +296,9 @@ export function DeliveryStatusSelect(props: {
   const meta = deliveryStatusMeta[props.value];
   const options = deliveryStatusOptions.filter(
     (option) =>
-      !["shipped", "delivered", "returned"].includes(option.value) ||
-      option.value === props.currentValue,
+      option.value === props.currentValue ||
+      (props.currentValue === "unfulfilled" && option.value === "preparing") ||
+      (props.currentValue === "preparing" && option.value === "ready_to_ship"),
   );
   return (
     <StatusSelect

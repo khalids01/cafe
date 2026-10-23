@@ -51,9 +51,7 @@ const safeAdminUserSelect = {
   banned: true,
   banReason: true,
   archived: true,
-  onboardingComplete: true,
-  plan: true,
-  subscriptionStatus: true,
+
   accounts: {
     select: { providerId: true },
   },
@@ -172,9 +170,7 @@ beforeEach(() => {
     banned: false,
     banReason: null,
     archived: false,
-    onboardingComplete: false,
-    plan: "free",
-    subscriptionStatus: null,
+
   });
   invitationCreateMock.mockResolvedValue({ id: "invitation-1" });
   userFindManyMock.mockResolvedValue([]);
@@ -192,9 +188,7 @@ beforeEach(() => {
     banned: false,
     banReason: null,
     archived: false,
-    onboardingComplete: false,
-    plan: "free",
-    subscriptionStatus: null,
+
   });
 });
 

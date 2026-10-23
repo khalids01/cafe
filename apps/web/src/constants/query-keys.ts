@@ -101,27 +101,6 @@ export const queryKeys = {
         rates: (params?: unknown) =>
           [...queryKeys.admin.ecommerce.shipping.all(), "rates", params] as const,
       },
-      delivery: {
-        all: () => ["admin-ecommerce-delivery"] as const,
-        providers: () =>
-          [...queryKeys.admin.ecommerce.delivery.all(), "providers"] as const,
-        connections: () =>
-          [...queryKeys.admin.ecommerce.delivery.all(), "connections"] as const,
-        services: () =>
-          [...queryKeys.admin.ecommerce.delivery.all(), "services"] as const,
-        rules: () =>
-          [...queryKeys.admin.ecommerce.delivery.all(), "routing-rules"] as const,
-        dispatches: () =>
-          [...queryKeys.admin.ecommerce.delivery.all(), "dispatches"] as const,
-        returns: () =>
-          [...queryKeys.admin.ecommerce.delivery.all(), "returns"] as const,
-        settlements: () =>
-          [...queryKeys.admin.ecommerce.delivery.all(), "settlements"] as const,
-        recommendation: (orderId: string) =>
-          [...queryKeys.admin.ecommerce.delivery.all(), "recommendation", orderId] as const,
-        tracking: (orderId: string) =>
-          [...queryKeys.admin.ecommerce.delivery.all(), "tracking", orderId] as const,
-      },
       discounts: {
         all: () => ["admin-ecommerce-discounts"] as const,
         list: (params?: unknown) =>

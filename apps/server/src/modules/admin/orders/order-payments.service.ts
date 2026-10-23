@@ -1,6 +1,4 @@
-import { releaseDeliveredShipmentClaim } from "../../delivery/shipment-claim";
 import { createHash } from "node:crypto";
-import { invalidatePaymentDispatches } from "../../ecommerce/orders/payment-dispatch";
 import { minorUnitsString, moneyStatus, orderMoney } from "../../ecommerce/orders/payment-accounting";
 import { paymentMinorUnits } from "../../ecommerce/orders/payment-policy";
 import { AdminOrdersServiceError, withOrderTransaction } from "./orders.service";
@@ -30,9 +28,6 @@ async function persistPayment(tx: any, order: any, entry: any, actorUserId: stri
     note: entry.note, actorUserId,
     metadata: { action: entry.entryType === "receipt" ? "payment_receipt_recorded" : "payment_receipt_reversed", paymentId: payment.id, amount: entry.amount, currency: entry.currency, method: entry.method, reference: entry.reference },
   } });
-  await invalidatePaymentDispatches(tx, order.id, actorUserId);
-  const delivered = await tx.courierConsignment.findMany({ where: { orderId: order.id, state: "delivered" } });
-  for (const shipment of delivered) await releaseDeliveredShipmentClaim(tx, shipment.id, actorUserId);
   return payment;
 }
 
@@ -61,10 +56,6 @@ export const orderPaymentsService = {
       const order = await currentOrder(tx, orderId);
       if (currency !== order.currency) throw new AdminOrdersServiceError("Payment currency mismatch", 409);
       if (order.orderStatus === "cancelled" || order.orderStatus === "completed") throw new AdminOrdersServiceError("Use reconciliation for cancelled or completed order collections", 409);
-      if (input.method === "cash_on_delivery") {
-        const courier = await tx.courierConsignment.findFirst({ where: { orderId, OR: [{ active: true }, { submittedAt: { not: null } }] } });
-        if (courier) throw new AdminOrdersServiceError("Record courier collection using its settlement evidence to avoid double credit", 409);
-      }
       return persistPayment(tx, order, { orderId, entryType: "receipt", amount, currency, method: input.method, idempotencyKey, reference, note, actorUserId, receivedAt: new Date() }, actorUserId);
     });
   },
@@ -76,7 +67,7 @@ export const orderPaymentsService = {
       const order = await currentOrder(tx, orderId);
       if (order.orderStatus === "completed") throw new AdminOrdersServiceError("Completed order corrections require reconciliation", 409);
       const receipt = order.payments.find((row: any) => row.id === paymentId);
-      if (!receipt || receipt.entryType !== "receipt" || receipt.settlementId) throw new AdminOrdersServiceError("Only this order's manual receipt can be corrected here", 409);
+      if (!receipt || receipt.entryType !== "receipt") throw new AdminOrdersServiceError("Only this order's manual receipt can be corrected here", 409);
       if (order.payments.some((row: any) => row.reversesId === paymentId)) throw new AdminOrdersServiceError("Receipt was already reversed", 409);
       return persistPayment(tx, order, {
         orderId, entryType: "reversal", amount: String(receipt.amount), currency: receipt.currency,

@@ -10,7 +10,7 @@ export type MoneyOrder = {
   currency: string;
   paymentStatus: string;
   paymentMethod?: string;
-  payments?: readonly (Omit<PaymentEvidence, "amount"> & { amount: unknown; id?: string; reversesId?: string | null; settlementId?: string | null })[];
+  payments?: readonly (Omit<PaymentEvidence, "amount"> & { amount: unknown; id?: string; reversesId?: string | null })[];
   refunds?: readonly { amount: unknown; currency?: string }[];
 };
 
@@ -50,15 +50,6 @@ export function orderMoney(order: MoneyOrder, validateStatus = true) {
   } catch (error) {
     throw new OrderMoneyError(error instanceof Error ? error.message : "Invalid payment evidence");
   }
-}
-
-export function courierCod(order: MoneyOrder) {
-  if (order.currency !== "BDT") throw new OrderMoneyError("Courier dispatch currently requires BDT");
-  const money = orderMoney(order);
-  if (money.outstanding > 0n && order.paymentMethod !== "cash_on_delivery") {
-    throw new OrderMoneyError("Unpaid non-COD orders cannot be dispatched");
-  }
-  return minorUnitsString(money.outstanding);
 }
 
 export function paymentSummary(order: MoneyOrder) {

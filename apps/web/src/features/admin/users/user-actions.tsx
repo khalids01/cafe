@@ -46,9 +46,6 @@ type AdminUserDetails = {
   banned: boolean;
   banReason: string | null;
   archived: boolean;
-  onboardingComplete: boolean;
-  plan: string | null;
-  subscriptionStatus: string | null;
   authenticationMethods: string[];
   role: { slug: string; name: string };
   invitations: Array<{ id: string; email: string; status: string; expiresAt: string | Date; role: { slug: string; name: string } }>;
@@ -291,9 +288,6 @@ export function UserActions({ user }: { user: any }) {
                 <Detail label="Role" value={details.role.name + " (" + details.role.slug + ")"} />
                 <Detail label="Email verified" value={details.emailVerified ? "Yes" : "No"} />
                 <Detail label="Status" value={details.banned ? "Banned" : details.archived ? "Archived" : "Active"} />
-                <Detail label="Onboarding" value={details.onboardingComplete ? "Complete" : "Not complete"} />
-                <Detail label="Plan" value={details.plan ?? "None"} />
-                <Detail label="Subscription" value={details.subscriptionStatus ?? "None"} />
                 <Detail label="Authentication" value={details.authenticationMethods.length ? details.authenticationMethods.join(", ") : "Not recorded"} />
                 <Detail label="Created" value={formatUserDate(details.createdAt)} />
                 <Detail label="Last updated" value={formatUserDate(details.updatedAt)} />

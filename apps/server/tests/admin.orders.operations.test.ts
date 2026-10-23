@@ -3,23 +3,18 @@ import { beforeEach, describe, expect, it, mock } from "bun:test";
 const actor = { userId: "admin-1", canRestock: true };
 let order: any;
 let reservations: any[];
-let shipments: any[];
 let recovery: any;
 let refunds: any[];
 let events: any[];
 let movements: any[];
-let exceptions: any[];
 let stock: number;
 let reserved: number;
 let loseReservationClaim: boolean;
-let loseOperationClaim: boolean;
 
 const db: any = {
-  foodOrderBooking: { findUnique: mock(async () => null), updateMany: mock(async () => ({ count: 0 })) },
+
   orderLineItem: { findMany: mock(async () => []) },
-  unitAllocation: { updateMany: mock(async () => ({ count: 0 })) },
-  inventoryUnit: { updateMany: mock(async () => ({ count: 0 })) },
-  courierShipmentClaim: { findUnique: mock(async () => null) },
+
   order: {
     findUnique: mock(async () => ({ ...order, recovery, refunds })),
     update: mock(async ({ data }: any) => Object.assign(order, data)),
@@ -40,6 +35,7 @@ const db: any = {
   inventoryStock: { update: mock(async ({ data }: any) => { stock += data.quantityOnHand?.increment ?? 0; reserved -= data.quantityReserved?.decrement ?? 0; return {}; }) },
   inventoryMovement: { create: mock(async ({ data }: any) => { movements.push(data); return data; }) },
   orderStatusEvent: {
+    findFirst: mock(async () => events.find((event) => ["preparing", "ready_to_ship"].includes(event.newValue)) ?? null),
     findMany: mock(async () => events.filter((event) => event.type === "delivery")),
     create: mock(async ({ data }: any) => { events.push(data); return data; }),
   },
@@ -47,29 +43,7 @@ const db: any = {
     aggregate: mock(async () => ({ _sum: { amount: refunds.reduce((sum, row) => sum + Number(row.amount), 0).toFixed(2) } })),
     create: mock(async ({ data }: any) => { const row = { id: "refund-1", ...data }; refunds.push(row); return row; }),
   },
-  courierConsignment: {
-    findMany: mock(async () => shipments.map((row) => ({ ...row, operations: row.operations.map((op: any) => ({ ...op })) }))),
-    update: mock(async ({ where, data }: any) => Object.assign(shipments.find((row) => row.id === where.id), data)),
-  },
-  courierOperation: {
-    updateMany: mock(async ({ where, data }: any) => {
-      if (loseOperationClaim) return { count: 0 };
-      let count = 0;
-      for (const row of shipments.flatMap((item) => item.operations)) {
-        if (where.id && row.id !== where.id) continue;
-        if (where.state?.in ? !where.state.in.includes(row.state) : row.state !== where.state) continue;
-        if (where.attemptCount !== undefined && row.attemptCount !== where.attemptCount) continue;
-        Object.assign(row, data); count++;
-      }
-      return { count };
-    }),
-    findFirst: mock(async () => shipments.flatMap((item) => item.operations).find((op) => ["pending", "retry", "processing"].includes(op.state)) ?? null),
-  },
-  courierDispatch: { update: mock(async () => ({})), updateMany: mock(async () => ({ count: 0 })) },
-  courierException: {
-    findFirst: mock(async ({ where }: any) => exceptions.find((row) => row.consignmentId === where.consignmentId) ?? null),
-    create: mock(async ({ data }: any) => { exceptions.push(data); return data; }),
-  },
+
   orderRecovery: {
     findUnique: mock(async () => recovery),
     create: mock(async ({ data }: any) => { recovery = { id: "recovery-1", disposition: "awaiting_inspection", restockedAt: null, ...data }; return recovery; }),
@@ -82,10 +56,10 @@ const db: any = {
 };
 // A local rollback fixture exercises service failure handling, not database isolation.
 db.$transaction = mock(async (callback: any) => {
-  const original = structuredClone({ order, reservations, shipments, recovery, refunds, events, movements, exceptions, stock, reserved });
+  const original = structuredClone({ order, reservations, recovery, refunds, events, movements, stock, reserved });
   try { return await callback(db); }
   catch (error) {
-    ({ order, reservations, shipments, recovery, refunds, events, movements, exceptions, stock, reserved } = original);
+    ({ order, reservations, recovery, refunds, events, movements, stock, reserved } = original);
     throw error;
   }
 });
@@ -97,11 +71,8 @@ const { withOrderTransaction } = await import("../src/modules/admin/orders/order
 beforeEach(() => {
   order = { id: "order-1", payments: [{ id: "receipt-1", amount: "300.00", currency: "BDT", entryType: "receipt" }], totalAmount: "300.00", currency: "BDT", orderStatus: "confirmed", paymentStatus: "paid", deliveryStatus: "unfulfilled", inventoryStatus: "committed", shippedAt: null, deliveredAt: null };
   reservations = [{ id: "reservation-1", variantId: "variant-1", locationId: "location-1", batchId: null, quantity: 2, status: "committed" }];
-  shipments = []; recovery = null; refunds = []; events = []; movements = []; exceptions = []; stock = 0; reserved = 0; loseReservationClaim = false; loseOperationClaim = false;
+  recovery = null; refunds = []; events = []; movements = []; stock = 0; reserved = 0; loseReservationClaim = false;
 });
-function shipment(overrides: any = {}, operationOverrides: any = {}) {
-  shipments = [{ id: "consignment-1", dispatchId: "dispatch-1", state: "pending_submission", externalId: null, submittedAt: null, operations: [{ id: "operation-1", kind: "create", state: "pending", attemptCount: 0, leaseUntil: null, ...operationOverrides }], ...overrides }];
-}
 async function receiveAndInspect(disposition: "sellable" | "unsafe" = "sellable") {
   await orderRecoveryService.receive(order.id, { allItemsReceived: true, note: "All two items received at original warehouse, return R1" }, actor.userId);
   await orderRecoveryService.inspect(order.id, { disposition, note: "Every item inspected" }, actor.userId);
@@ -120,25 +91,6 @@ describe("custody-aware cancellation", () => {
     await orderOperationsService.cancelOrder(order.id, { reason: "Not needed" }, actor);
     expect(reserved).toBe(0); expect(stock).toBe(0); expect(reservations[0].status).toBe("released");
   });
-  it("stops never-attempted queueing before stock recovery", async () => {
-    shipment(); await orderOperationsService.cancelOrder(order.id, { reason: "Cancel queued order" }, actor);
-    expect(shipments[0].operations[0].state).toBe("cancelled");
-    expect(shipments[0].state).toBe("cancelled_before_submission"); expect(stock).toBe(2);
-  });
-  it.each(["processing", "retry", "manual_review"])("holds attempted %s submissions for recovery", async (state) => {
-    shipment({}, { state, attemptCount: 1 });
-    expect(await orderOperationsService.cancelOrder(order.id, { reason: "Cancellation while submitting" }, actor)).toMatchObject({ recoveryRequired: true, inventorySideEffect: "none" });
-    expect(stock).toBe(0); expect(order.inventoryStatus).toBe("committed"); expect(exceptions).toHaveLength(1);
-    if (state === "retry") expect(shipments[0].operations[0].state).toBe("manual_review");
-  });
-  it("keeps stock unavailable after provider acceptance or manual handoff", async () => {
-    shipment({ state: "submitted", externalId: "external-1" }, { state: "completed", attemptCount: 1 });
-    await orderOperationsService.cancelOrder(order.id, { reason: "Courier already accepted" }, actor);
-    expect(stock).toBe(0);
-    order.orderStatus = "confirmed"; shipments = []; order.deliveryStatus = "shipped"; order.shippedAt = new Date();
-    await orderOperationsService.cancelOrder(order.id, { reason: "Manual handoff" }, actor);
-    expect(stock).toBe(0);
-  });
   it("uses historical shipment evidence after manual status regression", async () => {
     events.push({ type: "delivery", newValue: "shipped" });
     expect(await orderOperationsService.cancelOrder(order.id, { reason: "Legacy history" }, actor)).toMatchObject({ recoveryRequired: true });
@@ -155,11 +107,6 @@ describe("custody-aware cancellation", () => {
   it("rejects cancellation after delivery", async () => {
     order.deliveryStatus = "delivered"; order.deliveredAt = new Date();
     await expect(orderOperationsService.cancelOrder(order.id, { reason: "Too late" }, actor)).rejects.toThrow("delivered order"); expect(stock).toBe(0);
-  });
-  it("rolls back when a job lease wins the cancellation race", async () => {
-    shipment(); loseOperationClaim = true;
-    await expect(orderOperationsService.cancelOrder(order.id, { reason: "Race" }, actor)).rejects.toMatchObject({ status: 409 });
-    expect(order.orderStatus).toBe("confirmed"); expect(stock).toBe(0); expect(events).toHaveLength(0);
   });
   it("rolls back stock recovery on a lost reservation claim", async () => {
     loseReservationClaim = true;
@@ -192,10 +139,6 @@ describe("physical receipt, inspection and explicit recovery", () => {
   it("rejects repeated receipt and empty evidence", async () => {
     await receiveAndInspect(); await expect(orderRecoveryService.receive(order.id, { allItemsReceived: true, note: "Again" }, actor.userId)).rejects.toThrow("already been recorded");
     await expect(orderRecoveryService.inspect(order.id, { disposition: "sellable", note: " " }, actor.userId)).rejects.toThrow("evidence");
-  });
-  it("rejects receipt while booking is still in flight", async () => {
-    shipment({}, { state: "processing", attemptCount: 1 });
-    await expect(orderRecoveryService.receive(order.id, { allItemsReceived: true, note: "Received" }, actor.userId)).rejects.toThrow("uncertain courier booking"); expect(recovery).toBeNull(); expect(stock).toBe(0);
   });
   it("rejects expired stock even after a sellable inspection", async () => {
     await receiveAndInspect(); reservations[0].batch = { expiryDate: new Date(0) };
@@ -231,7 +174,7 @@ describe("refunds and stock are independent", () => {
 it("prepared food can never be restocked even after a sellable inspection", async () => {
   order.deliveryStatus = "shipped";
   await receiveAndInspect();
-  db.foodOrderBooking.findUnique.mockResolvedValueOnce({ state: "cancelled", preparedAt: new Date() });
+  events.push({ type: "delivery", newValue: "preparing" });
   await expect(orderRecoveryService.restock(order.id, "Inspection", actor.userId)).rejects.toThrow("Prepared food cannot");
   expect(stock).toBe(0); expect(recovery.restockedAt).toBeNull();
 });

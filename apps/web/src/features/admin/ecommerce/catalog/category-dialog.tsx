@@ -54,6 +54,7 @@ export function CategoryDialog(props: {
                   .map((category) => ({ value: category.id, label: category.name })),
               ]}
             />
+            <SelectField label="Menu item type" value={draft.fulfillmentKind} onChange={value => props.onChange({ ...draft, fulfillmentKind: value as CategoryDraft["fulfillmentKind"] })} options={[{ value: "standard", label: "Standard menu item" }, { value: "packaged_food", label: "Packaged food" }, { value: "fresh_food", label: "Fresh / prepared food" }]} />
             <SelectField
               label="Brand policy"
               value={draft.brandPolicy}
@@ -62,12 +63,6 @@ export function CategoryDialog(props: {
               }
               options={brandPolicyOptions}
             />
-            <SelectField label="Product handling" value={draft.fulfillmentKind} onChange={value => props.onChange({ ...draft, fulfillmentKind: value as CategoryDraft["fulfillmentKind"], ...(value !== "gadget" ? { serialTracking: "none", warrantyDays: "0" } : {}) })} options={[{ value: "standard", label: "Standard" }, { value: "packaged_food", label: "Packaged food" }, { value: "fresh_food", label: "Fresh / prepared food" }, { value: "gadget", label: "Gadget" }, { value: "clothing", label: "Clothing" }]} />
-            <p className="text-muted-foreground text-xs">Set handling on each product category. Parent handling is not inherited. Food and clothing cannot have warranty.</p>
-            {draft.fulfillmentKind === "gadget" ? <>
-              <SelectField label="Unit tracking" value={draft.serialTracking} onChange={value => props.onChange({ ...draft, serialTracking: value as CategoryDraft["serialTracking"] })} options={[{ value: "none", label: "None" }, { value: "serial", label: "Serial" }, { value: "imei", label: "IMEI" }, { value: "serial_and_imei", label: "Serial and IMEI" }]} />
-              <TextField label="Warranty days from delivery (0 disables)" value={draft.warrantyDays} onChange={warrantyDays => props.onChange({ ...draft, warrantyDays })} />
-            </> : null}
             <TextField
               label="Sort order"
               value={draft.sortOrder}

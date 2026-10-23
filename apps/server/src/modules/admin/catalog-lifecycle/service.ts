@@ -120,7 +120,6 @@ export async function assertLifecycleSafe(
                         in: ["pending", "confirmed", "processing"],
                       },
                     },
-                    { courierConsignments: { some: { active: true } } },
                   ],
                 },
               }),
@@ -130,7 +129,7 @@ export async function assertLifecycleSafe(
       reject(
         deleting
           ? "Order history references this product. It cannot be permanently deleted."
-          : "Open orders or active courier work depend on this product. Complete that work before archiving.",
+          : "Open orders depend on this product. Complete those orders before archiving.",
       );
     if (
       await tx.stockReservation.count({
@@ -146,11 +145,10 @@ export async function assertLifecycleSafe(
         tx.inventoryStock.count({ where: { variant: { productId: id } } }),
         tx.inventoryMovement.count({ where: { variant: { productId: id } } }),
         tx.inventoryBatch.count({ where: { variant: { productId: id } } }),
-        tx.inventoryUnit.count({ where: { variant: { productId: id } } }),
       ]);
       if (counts.some(Boolean))
         reject(
-          "Inventory stock, batch, movement or serial history references this product. Keep it archived.",
+          "Inventory stock, batch, or movement history references this product. Keep it archived.",
         );
     }
   }

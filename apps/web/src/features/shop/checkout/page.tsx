@@ -27,7 +27,6 @@ type CheckoutForm = {
   region: string;
   postalCode: string;
   country: string;
-  foodSlotId: string;
   shippingRateId: string;
   customerNotes: string;
   discountCode: string;
@@ -43,7 +42,6 @@ const initialForm: CheckoutForm = {
   region: "",
   postalCode: "",
   country: "Bangladesh",
-  foodSlotId: "",
   shippingRateId: "",
   customerNotes: "",
   discountCode: "",
@@ -62,17 +60,6 @@ export function CheckoutPage() {
   const [appliedDiscount, setAppliedDiscount] = useState<AppliedDiscount | null>(null);
   const [idempotencyKey] = useState(() => crypto.randomUUID());
   const cart = useCart();
-  const legacyItems = cart.items.filter((item) => !item.product.fulfillmentKind);
-  const policyQuery = useQuery({
-    queryKey: ["checkout-product-policies", legacyItems.map((item) => item.product.slug)],
-    enabled: legacyItems.length > 0,
-    queryFn: () => Promise.all(legacyItems.map(async (item) => {
-      const { data, error } = await client.shop.products({ slug: item.product.slug }).get();
-      if (error || !data) throw new Error("An item could not be checked. Review your cart before ordering.");
-      return data.fulfillmentKind;
-    })),
-  });
-  const needsFreshSlot = cart.items.some((item) => item.product.fulfillmentKind === "fresh_food") || policyQuery.data?.includes("fresh_food") === true;
   const clearCart = useCartStore((state) => state.clearCart);
   const settingsQuery = useQuery({
     queryKey: ["shop", "settings"],
@@ -82,7 +69,6 @@ export function CheckoutPage() {
       return data as PublicStoreSettings;
     },
   });
-  const slotsQuery = useQuery({ queryKey: ["shop", "food-slots", form.postalCode], enabled: needsFreshSlot && Boolean(form.postalCode.trim()), queryFn: async () => { const { data, error } = await client.shop["food-slots"].get({ query: { postalCode: form.postalCode } }); if (error) throw new Error("Could not load fresh-food delivery slots"); return data as { id: string; label: string; startsAt: string; endsAt: string; availableUnits: number }[]; } });
   const shippingRatesQuery = useQuery({
     queryKey: ["shop", "shipping-rates", cart.currency],
     queryFn: async () => {
@@ -142,7 +128,6 @@ export function CheckoutPage() {
           country: form.country,
         },
         billingAddress: null,
-        foodSlotId: form.foodSlotId || undefined,
         shippingRateId: selectedShippingRate?.id,
         paymentMethod: "cash_on_delivery",
         idempotencyKey,
@@ -171,8 +156,6 @@ export function CheckoutPage() {
     Boolean(form.country.trim()) &&
     Boolean(selectedShippingRate) &&
     Boolean(cart.items.length) &&
-    (!legacyItems.length || policyQuery.isSuccess) &&
-    (!needsFreshSlot || Boolean(form.foodSlotId)) &&
     settingsQuery.data?.checkoutEnabled === true &&
     !shippingRatesQuery.isPending && !shippingRatesQuery.isError;
 
@@ -219,15 +202,10 @@ export function CheckoutPage() {
                 <TextField label="Address line 2" autoComplete="address-line2" value={form.addressLine2} onChange={(addressLine2) => setForm({ ...form, addressLine2 })} />
                 <TextField label="City" autoComplete="address-level2" required value={form.city} onChange={(city) => setForm({ ...form, city })} />
                 <TextField label="Region" autoComplete="address-level1" value={form.region} onChange={(region) => setForm({ ...form, region })} />
-                <TextField label="Postal code" autoComplete="postal-code" value={form.postalCode} onChange={(postalCode) => setForm({ ...form, postalCode, foodSlotId: "" })} />
+                <TextField label="Postal code" autoComplete="postal-code" value={form.postalCode} onChange={(postalCode) => setForm({ ...form, postalCode })} />
               </div>
               <div className="space-y-2">
-                {needsFreshSlot ? <div className="space-y-2"><Label htmlFor="food-slot">Fresh-food delivery slot</Label>
-                <p className="text-muted-foreground text-sm">Enter your postal code and choose an available delivery window for your fresh-food items.</p>
-                <select id="food-slot" className="w-full rounded border p-2" value={form.foodSlotId} onChange={e => setForm({ ...form, foodSlotId: e.target.value })}><option value="">Choose a delivery window</option>{(slotsQuery.data ?? []).map(slot => <option key={slot.id} value={slot.id} disabled={slot.availableUnits === 0}>{slot.label} · {new Date(slot.startsAt).toLocaleString()} – {new Date(slot.endsAt).toLocaleTimeString()} · {slot.availableUnits} units available</option>)}</select>
-                {slotsQuery.isFetching ? <p>Loading slots...</p> : slotsQuery.isError ? <div role="alert"><p>Could not load delivery slots.</p><Button type="button" variant="outline" onClick={() => void slotsQuery.refetch()}>Try again</Button></div> : form.postalCode && !(slotsQuery.data ?? []).length ? <p>No fresh-food slot is available for this area.</p> : null}
-                </div> : null}
-                <Label>Shipping method</Label>
+                <Label>Delivery fee</Label>
                 <RadioGroup
                   value={selectedShippingRate?.id ?? ""}
                   onValueChange={(value) => setForm({ ...form, shippingRateId: value ?? "" })}
@@ -288,7 +266,6 @@ export function CheckoutPage() {
                 />
               </div>
               <div className="rounded-xl bg-muted/40 p-4"><p className="font-medium">Cash on delivery</p><p className="mt-1 text-sm text-muted-foreground">Your final total and order number are confirmed after the order is accepted.</p></div>
-              {policyQuery.isError ? <div role="alert" className="text-sm text-destructive"><p>An item could not be checked. Review your cart before ordering.</p><Button type="button" variant="outline" onClick={() => void policyQuery.refetch()}>Try again</Button></div> : null}
               {settingsQuery.isError || shippingRatesQuery.isError ? <div role="alert" className="text-sm text-destructive"><p>Delivery or checkout settings couldn’t be loaded.</p><Button type="button" variant="outline" className="mt-2" onClick={() => { void settingsQuery.refetch(); void shippingRatesQuery.refetch(); }}>Try again</Button></div> : null}
               {checkout.isError ? <p role="alert" className="text-sm text-destructive">{checkout.error.message}</p> : null}
               <Button className="min-h-12 w-full rounded-full sm:w-auto sm:px-10" disabled={!canSubmit || checkout.isPending} type="submit">

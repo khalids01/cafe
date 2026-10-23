@@ -21,7 +21,6 @@ export function getE2eServerEnvDefaults() {
     REDIS_KEY_PREFIX: e2eRuntimeConfig.redisKeyPrefix,
     BETTER_AUTH_URL: e2eRuntimeConfig.serverUrl,
     CORS_ORIGIN: e2eRuntimeConfig.webUrl,
-    ENABLE_POLAR: "false",
     GITHUB_CLIENT_ID: e2eRuntimeConfig.oauthPlaceholders.githubClientId,
     GITHUB_CLIENT_SECRET: e2eRuntimeConfig.oauthPlaceholders.githubClientSecret,
     GOOGLE_CLIENT_ID: e2eRuntimeConfig.oauthPlaceholders.googleClientId,

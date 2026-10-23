@@ -756,15 +756,14 @@ it("another customer cannot read an order using the purchaser's email or phone",
   await expect(orderService.getCustomerOrder("other", "ORD-1", { email: "owner@example.test" })).rejects.toThrow("Order not found");
   await expect(orderService.getCustomerOrder("other", "ORD-1", { phone: "01700000000" })).rejects.toThrow("Order not found");
 });
-it("fresh checkout requires a slot and snapshots policy onto its order item", async () => {
+it("fresh cafe checkout works without a delivery slot", async () => {
   const { orderService } = await import("../src/modules/shop/services/order.service");
   const variant = variantRow(); variant.product.category.fulfillmentKind = "fresh_food";
   productVariantFindManyMock.mockResolvedValueOnce([variant]);
-  await expect(orderService.checkout("user-1", { items: [{ variantId: "variant-1", quantity: 1 }], customerName: "Customer", customerEmail: "customer@example.test", shippingAddress: { line1: "House 1", postalCode: "1207" } })).rejects.toThrow("Choose a delivery slot");
-  expect(stockReservationCreateMock).not.toHaveBeenCalled();
-  expect(orderCreateMock.mock.calls[0]?.[0].data.lineItems.create[0]).toMatchObject({ fulfillmentKind: "fresh_food", serialTracking: "none", warrantyDays: 0 });
+  await orderService.checkout("user-1", { items: [{ variantId: "variant-1", quantity: 1 }], customerName: "Customer", customerEmail: "customer@example.test", shippingAddress: { line1: "House 1", postalCode: "1207" } });
+  expect(stockReservationCreateMock).toHaveBeenCalled();
+  expect(orderCreateMock.mock.calls[0]?.[0].data.lineItems.create[0]).toMatchObject({ fulfillmentKind: "fresh_food" });
 });
-
 
 it("paginates customer orders and counts only the same owner's records", async () => {
   const { orderService } = await import("../src/modules/shop/services/order.service.ts");

@@ -22,21 +22,8 @@ export const env = createEnv({
     GITHUB_CLIENT_SECRET: z.string().min(1),
     GOOGLE_CLIENT_ID: z.string().min(1),
     GOOGLE_CLIENT_SECRET: z.string().min(1),
-    YOUTUBE_ENABLED: z.enum(["true", "false"]).default("false"),
-    YOUTUBE_CHANNEL_ID: z.string().min(1).optional(),
     AUTH_SESSION_COOKIE_NAME: z.string().min(1).default("better-auth.session_token"),
     AUTH_COOKIE_DOMAIN: z.string().min(1).optional(),
-    POLAR_ACCESS_TOKEN: z.string().optional(),
-    POLAR_WEBHOOK_SECRET: z.string().optional(),
-    POLAR_SUCCESS_URL: z.string().url().optional(),
-    POLAR_PRO_MONTHLY_ID: z.string().optional(),
-    POLAR_PRO_YEARLY_ID: z.string().optional(),
-    POLAR_MODE: z.enum(["sandbox", "production"]).default("sandbox"),
-    ENABLE_POLAR: z
-      .string()
-      .default("true")
-      .transform((val) => val === "true"),
-    COURIER_WORKERS_ENABLED: z.enum(["true", "false"]).default("true").transform((val) => val === "true"),
     E2E_MODE: z
       .string()
       .default("false")
@@ -53,12 +40,6 @@ export const env = createEnv({
     FILE_SERVER_URL: z.string().url().optional(),
     FILE_SERVER_PUBLIC_URL: z.string().url().optional(),
     FILE_SERVER_API_KEY: z.string().optional(),
-    STEAD_FAST_API_KEY: z.string().optional(),
-    STEAD_FAST_SECRET_KEY: z.string().optional(),
-    STEAD_FAST_BASE_URL: z.string().url().optional(),
-    STEAD_FAST_WEBHOOK_TOKEN: z.string().optional(),
-    COURIER_CREDENTIAL_ACTIVE_KEY_VERSION: z.coerce.number().int().positive().optional(),
-    COURIER_CREDENTIAL_ENCRYPTION_KEYS: z.string().optional(),
   },
   runtimeEnv: {
     ...process.env,
@@ -66,41 +47,3 @@ export const env = createEnv({
   },
   emptyStringAsUndefined: true,
 });
-
-type PolarEnv = {
-  POLAR_ACCESS_TOKEN: string;
-  POLAR_WEBHOOK_SECRET: string;
-  POLAR_SUCCESS_URL: string;
-  POLAR_MODE: "sandbox" | "production";
-};
-
-export function getRequiredPolarEnv(): PolarEnv {
-  if (!env.ENABLE_POLAR) {
-    throw new Error("Polar is disabled. Set ENABLE_POLAR=true to use Polar.");
-  }
-
-  const missing = [
-    ["POLAR_ACCESS_TOKEN", env.POLAR_ACCESS_TOKEN],
-    ["POLAR_WEBHOOK_SECRET", env.POLAR_WEBHOOK_SECRET],
-    ["POLAR_SUCCESS_URL", env.POLAR_SUCCESS_URL],
-  ]
-    .filter(([, value]) => !value)
-    .map(([key]) => key);
-
-  if (missing.length > 0) {
-    throw new Error(
-      `Polar is enabled but missing required env vars: ${missing.join(", ")}`,
-    );
-  }
-
-  return {
-    POLAR_ACCESS_TOKEN: env.POLAR_ACCESS_TOKEN!,
-    POLAR_WEBHOOK_SECRET: env.POLAR_WEBHOOK_SECRET!,
-    POLAR_SUCCESS_URL: env.POLAR_SUCCESS_URL!,
-    POLAR_MODE: env.POLAR_MODE,
-  };
-}
-
-if (env.ENABLE_POLAR) {
-  getRequiredPolarEnv();
-}

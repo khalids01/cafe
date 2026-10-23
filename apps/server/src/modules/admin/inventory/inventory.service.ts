@@ -1,5 +1,3 @@
-import { registerUnit } from "../../ecommerce/niche/gadgets";
-import { NichePolicyError } from "../../ecommerce/niche/policy";
 import { availableStockQuantity } from "../../ecommerce/inventory/stock-policy";
 import prisma, { type Prisma } from "@db/server";
 import type {
@@ -321,16 +319,6 @@ function assignmentHasValue(assignment: BatchAttributeAssignmentInput) {
 }
 
 export class AdminInventoryService {
-  async listUnits(variantId: string) { return prisma.inventoryUnit.findMany({ where: { variantId, state: "available" }, orderBy: { createdAt: "asc" }, take: 100 }); }
-  async registerUnit(input: { variantId: string; locationId: string; batchId?: string | null; serial?: string | null; imei?: string | null }, actor: string) {
-    try { return await prisma.$transaction(tx => registerUnit(tx, input, actor), { isolationLevel: "Serializable" }); }
-    catch (e) {
-      if (e instanceof NichePolicyError) throw new AdminInventoryServiceError(e.message, e.status);
-      if (["P2002", "P2034"].includes(String((e as { code?: string }).code))) throw new AdminInventoryServiceError("Serial/IMEI already exists or inventory changed; reload", 409);
-      throw e;
-    }
-  }
-
   async updateBatchDisposition(id: string, input: { disposition: "sellable" | "quarantined" | "unsafe"; reason: string }, actorUserId: string) {
     const reason = input.reason.trim();
     if (!reason) throw new AdminInventoryServiceError("Inspection reason is required");

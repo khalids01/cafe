@@ -10,7 +10,6 @@ export function productInclude() {
         slug: true,
         isActive: true, archivedAt: true,
         fulfillmentKind: true,
-        warrantyDays: true,
       },
     },
     brand: {
@@ -73,11 +72,8 @@ export function orderInclude() {
     addresses: {
       orderBy: { type: "desc" },
     },
-    foodBooking: { include: { slot: true } },
     lineItems: {
       include: {
-        units: true,
-        unitAllocations: { include: { unit: true, claims: true } },
         product: {
           select: {
             id: true,
@@ -129,8 +125,6 @@ export function checkoutVariantInclude() {
             slug: true,
             isActive: true, archivedAt: true,
             fulfillmentKind: true,
-            serialTracking: true,
-            warrantyDays: true,
           },
         },
         brand: {
