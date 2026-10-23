@@ -27,8 +27,6 @@ mock.module("@db/server", () => ({
     githubSignUpEnabled: true,
     googleSignInEnabled: true,
     googleSignUpEnabled: true,
-    discordSignInEnabled: true,
-    discordSignUpEnabled: true,
     magicLinkSignInEnabled: true,
     magicLinkSignUpEnabled: true,
   })),
@@ -69,8 +67,6 @@ describe("authController", () => {
       githubSignUpEnabled: true,
       googleSignInEnabled: true,
       googleSignUpEnabled: true,
-      discordSignInEnabled: true,
-      discordSignUpEnabled: true,
     });
   });
 

@@ -10,8 +10,7 @@ export type AuthMethod =
   | "password"
   | "magic-link"
   | "github"
-  | "google"
-  | "discord";
+  | "google";
 export type AuthMode = "sign-in" | "sign-up";
 
 export type PublicAuthSettings = {
@@ -23,8 +22,6 @@ export type PublicAuthSettings = {
   githubSignUpEnabled: boolean;
   googleSignInEnabled: boolean;
   googleSignUpEnabled: boolean;
-  discordSignInEnabled: boolean;
-  discordSignUpEnabled: boolean;
 };
 
 const LAST_AUTH_METHOD_KEY = "ts-starter:last-auth-method";
@@ -54,7 +51,7 @@ export function useLastAuthMethod() {
   useEffect(() => {
     const stored = window.localStorage.getItem(LAST_AUTH_METHOD_KEY);
     if (
-      ["password", "magic-link", "github", "google", "discord"].includes(
+      ["password", "magic-link", "github", "google"].includes(
         stored ?? ""
       )
     ) {

@@ -12,7 +12,7 @@ import {
   type PublicAuthSettings,
 } from "./auth-methods";
 
-type SocialProvider = "github" | "google" | "discord";
+type SocialProvider = "github" | "google";
 
 const providers: Array<{
   id: SocialProvider;
@@ -31,12 +31,6 @@ const providers: Array<{
     className:
       "bg-[#202124] text-white shadow-sm hover:bg-[#303134] focus-visible:ring-[#8ab4f8]",
   },
-  {
-    id: "discord",
-    label: "Discord",
-    className:
-      "bg-[#5865f2] text-white shadow-sm hover:bg-[#4752c4] focus-visible:ring-[#5865f2]",
-  },
 ];
 
 function ProviderIcon({ provider, ...props }: SVGProps<SVGSVGElement> & { provider: SocialProvider }) {
@@ -47,14 +41,6 @@ function ProviderIcon({ provider, ...props }: SVGProps<SVGSVGElement> & { provid
         <path fill="#34A853" d="M12 22c2.7 0 4.97-.9 6.62-2.38l-3.24-2.53c-.9.6-2.05.96-3.38.96-2.61 0-4.82-1.76-5.61-4.13H3.04v2.61A10 10 0 0 0 12 22Z" />
         <path fill="#FBBC05" d="M6.39 13.92A6 6 0 0 1 6.08 12c0-.67.11-1.32.31-1.92V7.47H3.04A10 10 0 0 0 2 12c0 1.61.38 3.14 1.04 4.53l3.35-2.61Z" />
         <path fill="#EA4335" d="M12 5.95c1.47 0 2.79.5 3.83 1.5l2.87-2.87A9.6 9.6 0 0 0 12 2a10 10 0 0 0-8.96 5.47l3.35 2.61C7.18 7.71 9.39 5.95 12 5.95Z" />
-      </svg>
-    );
-  }
-
-  if (provider === "discord") {
-    return (
-      <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
-        <path d="M19.54 5.34A16.7 16.7 0 0 0 15.44 4a11.5 11.5 0 0 0-.52 1.06 15.5 15.5 0 0 0-4.82 0A11 11 0 0 0 9.57 4a16.8 16.8 0 0 0-4.11 1.34C2.86 9.18 2.16 12.92 2.51 16.6a16.5 16.5 0 0 0 5.03 2.55c.41-.55.77-1.14 1.08-1.76a10.8 10.8 0 0 1-1.7-.82l.42-.33a11.97 11.97 0 0 0 10.32 0l.43.33c-.55.33-1.12.6-1.71.82.31.62.67 1.21 1.08 1.76a16.5 16.5 0 0 0 5.03-2.55c.42-4.27-.72-7.98-2.95-11.26ZM9.18 14.33c-.98 0-1.79-.9-1.79-2s.79-2 1.79-2 1.8.9 1.78 2c0 1.1-.79 2-1.78 2Zm5.65 0c-.98 0-1.79-.9-1.79-2s.79-2 1.79-2 1.8.9 1.78 2c0 1.1-.78 2-1.78 2Z" />
       </svg>
     );
   }

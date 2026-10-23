@@ -7,8 +7,6 @@ export const UpdateAuthSettingsDto = t.Object({
   githubSignUpEnabled: t.Boolean(),
   googleSignInEnabled: t.Boolean(),
   googleSignUpEnabled: t.Boolean(),
-  discordSignInEnabled: t.Boolean(),
-  discordSignUpEnabled: t.Boolean(),
   magicLinkSignInEnabled: t.Boolean(),
   magicLinkSignUpEnabled: t.Boolean(),
 });

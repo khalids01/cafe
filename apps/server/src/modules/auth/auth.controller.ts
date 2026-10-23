@@ -39,8 +39,6 @@ export const authController = new Elysia({ prefix: "/auth" })
       githubSignUpEnabled: settings.githubSignUpEnabled,
       googleSignInEnabled: settings.googleSignInEnabled,
       googleSignUpEnabled: settings.googleSignUpEnabled,
-      discordSignInEnabled: settings.discordSignInEnabled,
-      discordSignUpEnabled: settings.discordSignUpEnabled,
     };
   })
   .post(

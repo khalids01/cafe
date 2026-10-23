@@ -127,7 +127,7 @@ docker compose -f docker-compose.production.yml run --rm --no-deps migrate
 
 This runs only migrations and removes the temporary container afterward. It does not start web/API or seed data.
 
-Configure OAuth apps, SMTP and file storage as needed. The server currently requires all three OAuth provider ID/secret pairs even if you intend to use only one provider. Use real provider configuration for enabled sign-in flows. File uploads require your separately provisioned file server.
+Configure OAuth apps, SMTP and file storage as needed. The server requires the GitHub and Google OAuth client ID/secret pairs. Use real provider configuration for enabled sign-in flows. File uploads require your separately provisioned file server.
 
 ## 5. Configure Dokploy
 
@@ -160,8 +160,6 @@ GITHUB_CLIENT_ID=REPLACE_ME
 GITHUB_CLIENT_SECRET=REPLACE_ME
 GOOGLE_CLIENT_ID=REPLACE_ME
 GOOGLE_CLIENT_SECRET=REPLACE_ME
-DISCORD_CLIENT_ID=REPLACE_ME
-DISCORD_CLIENT_SECRET=REPLACE_ME
 ENABLE_POLAR=false
 OWNER_SETUP_CHECK=false
 COURIER_WORKERS_ENABLED=false

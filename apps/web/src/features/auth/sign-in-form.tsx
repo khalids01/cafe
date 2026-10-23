@@ -42,7 +42,6 @@ function getOAuthErrorMessage(error?: string, description?: string) {
 const methodLabels: Record<string, string> = {
   github: "GitHub",
   google: "Google",
-  discord: "Discord",
   "magic-link": "Magic Link",
 };
 
@@ -149,8 +148,7 @@ export default function SignInForm({
 
   const hasSocialMethod =
     settings.githubSignInEnabled ||
-    settings.googleSignInEnabled ||
-    settings.discordSignInEnabled;
+    settings.googleSignInEnabled;
 
   return (
     <div className="mx-auto my-10 w-full max-w-md space-y-6 rounded-3xl border bg-card p-6 md:my-16 md:p-8">

@@ -26,11 +26,10 @@ export const Route = createFileRoute("/_protected/account")({
   component: AccountPage,
 });
 
-type Provider = "github" | "google" | "discord";
+type Provider = "github" | "google";
 const providers: Array<{ id: Provider; label: string }> = [
   { id: "github", label: "GitHub" },
   { id: "google", label: "Google" },
-  { id: "discord", label: "Discord" },
 ];
 
 function AccountPage() {

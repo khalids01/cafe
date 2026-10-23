@@ -4,7 +4,7 @@ import { recordUserAuthMethod, type AuthMethod } from "@db/server";
 function resolveAuthMethod(context: { path?: string; params?: { id?: string } }): AuthMethod | null {
   if (context.path === "/callback/:id") {
     const provider = context.params?.id;
-    if (provider === "github" || provider === "google" || provider === "discord") {
+    if (provider === "github" || provider === "google") {
       return provider;
     }
   }

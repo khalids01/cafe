@@ -99,13 +99,6 @@ export const authOptions = {
       prompt: "select_account",
       overrideUserInfoOnSignIn: true,
     },
-    discord: {
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
-      disableImplicitSignUp: true,
-      prompt: "consent",
-      overrideUserInfoOnSignIn: true,
-    },
   },
   advanced: {
     disableOriginCheck: false,

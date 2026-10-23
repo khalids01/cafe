@@ -7,7 +7,7 @@ import { rememberAuthMethod } from "@/features/auth/auth-methods";
 
 export const Route = createFileRoute("/_auth/auth-complete")({
   validateSearch: z.object({
-    method: z.enum(["password", "magic-link", "github", "google", "discord"]),
+    method: z.enum(["password", "magic-link", "github", "google"]),
     next: z.string().optional(),
   }),
   component: AuthCompletePage,

@@ -29,11 +29,6 @@ const socialProviderSettings = {
     signIn: "googleSignInEnabled",
     signUp: "googleSignUpEnabled",
   },
-  discord: {
-    label: "Discord",
-    signIn: "discordSignInEnabled",
-    signUp: "discordSignUpEnabled",
-  },
 } as const;
 
 export function authAvailability(): BetterAuthPlugin {

@@ -10,8 +10,6 @@ const baseEnv = {
   GITHUB_CLIENT_SECRET: "test-github-client-secret",
   GOOGLE_CLIENT_ID: "test-google-client-id",
   GOOGLE_CLIENT_SECRET: "test-google-client-secret",
-  DISCORD_CLIENT_ID: "test-discord-client-id",
-  DISCORD_CLIENT_SECRET: "test-discord-client-secret",
   CORS_ORIGIN: "http://localhost:3000",
   NODE_ENV: "test",
   E2E_MODE: "false",

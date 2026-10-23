@@ -13,8 +13,6 @@ export const e2eRuntimeConfig = {
     githubClientSecret: "e2e-github-client-secret",
     googleClientId: "e2e-google-client-id",
     googleClientSecret: "e2e-google-client-secret",
-    discordClientId: "e2e-discord-client-id",
-    discordClientSecret: "e2e-discord-client-secret",
   },
 } as const;
 
@@ -29,7 +27,5 @@ export function getE2eServerEnvDefaults() {
     GITHUB_CLIENT_SECRET: e2eRuntimeConfig.oauthPlaceholders.githubClientSecret,
     GOOGLE_CLIENT_ID: e2eRuntimeConfig.oauthPlaceholders.googleClientId,
     GOOGLE_CLIENT_SECRET: e2eRuntimeConfig.oauthPlaceholders.googleClientSecret,
-    DISCORD_CLIENT_ID: e2eRuntimeConfig.oauthPlaceholders.discordClientId,
-    DISCORD_CLIENT_SECRET: e2eRuntimeConfig.oauthPlaceholders.discordClientSecret,
   } as const;
 }

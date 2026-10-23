@@ -122,8 +122,7 @@ export default function SignUpForm({
 
   const hasSocialMethod =
     settings.githubSignUpEnabled ||
-    settings.googleSignUpEnabled ||
-    settings.discordSignUpEnabled;
+    settings.googleSignUpEnabled;
 
   return (
     <div className="mx-auto my-10 w-full max-w-md space-y-6 rounded-3xl border bg-card p-6 md:my-16 md:p-8">
