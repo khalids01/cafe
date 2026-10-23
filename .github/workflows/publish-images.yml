@@ -59,7 +59,6 @@ jobs:
             BRAND=${{ vars.BRAND }}
             VITE_SERVER_URL=${{ vars.VITE_SERVER_URL }}
             VITE_ENABLE_POLAR=${{ vars.VITE_ENABLE_POLAR || 'false' }}
-            VITE_OWNER_SETUP_CHECK=${{ vars.VITE_OWNER_SETUP_CHECK || 'false' }}
             AUTH_SESSION_COOKIE_NAME=${{ vars.AUTH_SESSION_COOKIE_NAME || 'better-auth.session_token' }}
           cache-from: type=gha,scope=web-${{ vars.BRAND }}
           cache-to: type=gha,mode=max,scope=web-${{ vars.BRAND }}

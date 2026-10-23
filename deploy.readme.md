@@ -53,7 +53,6 @@ In **Settings → Secrets and variables → Actions → Variables**, configure:
 | `BRAND` | `foodshop` | Yes: `foodshop`, `bestsky` or `airshop` |
 | `VITE_SERVER_URL` | `https://api.shop.example.com` | Yes |
 | `VITE_ENABLE_POLAR` | `false` | Defaults to false |
-| `VITE_OWNER_SETUP_CHECK` | `false` | Defaults to false |
 | `AUTH_SESSION_COOKIE_NAME` | `better-auth.session_token` | Defaults to this value |
 
 Replace example domains with your actual domains. These values are public web build configuration. Changing the browser configuration requires rebuilding the web image; changing Dokploy env alone will not rewrite its browser bundle. Keep the corresponding Dokploy values equal to the values used to build the selected image.
@@ -147,7 +146,6 @@ BRAND=foodshop
 IMAGE_TAG=sha-REPLACE_WITH_FULL_PUBLISHED_COMMIT
 VITE_SERVER_URL=https://api.shop.example.com
 VITE_ENABLE_POLAR=false
-VITE_OWNER_SETUP_CHECK=false
 AUTH_SESSION_COOKIE_NAME=better-auth.session_token
 
 DATABASE_URL=postgresql://SHOP_USER:URL_ENCODED_PASSWORD@POSTGRES_SERVICE:5432/SHOP_DATABASE
@@ -161,7 +159,6 @@ GITHUB_CLIENT_SECRET=REPLACE_ME
 GOOGLE_CLIENT_ID=REPLACE_ME
 GOOGLE_CLIENT_SECRET=REPLACE_ME
 ENABLE_POLAR=false
-OWNER_SETUP_CHECK=false
 COURIER_WORKERS_ENABLED=false
 ```
 

@@ -19,7 +19,6 @@ docker buildx build --platform "$build_platform" --push \
   --build-arg "BRAND=$BRAND" \
   --build-arg "VITE_SERVER_URL=$VITE_SERVER_URL" \
   --build-arg "VITE_ENABLE_POLAR=${VITE_ENABLE_POLAR:-false}" \
-  --build-arg "VITE_OWNER_SETUP_CHECK=${VITE_OWNER_SETUP_CHECK:-false}" \
   --build-arg "AUTH_SESSION_COOKIE_NAME=${AUTH_SESSION_COOKIE_NAME:-better-auth.session_token}" \
   --tag "$image_repository:web-$BRAND-$image_tag" .
 printf '\nBoth images published. Set Dokploy IMAGE_TAG=%s\n' "$image_tag"

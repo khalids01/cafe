@@ -9,7 +9,7 @@ export function step13ProductionEnv(artifacts: string): Record<string, string> {
     REDIS_KEY_PREFIX: `ts-starter:e2e:step13:${crypto.randomUUID()}:`,
     BETTER_AUTH_SECRET: "fictional-step13-only-auth-secret-never-use-in-a-shop",
     BETTER_AUTH_URL: "http://localhost:3013", CORS_ORIGIN: "http://localhost:3014", PORT: "3013",
-    VITE_PORT: "3014", VITE_SERVER_URL: "http://localhost:3013", VITE_ENABLE_POLAR: "false", VITE_OWNER_SETUP_CHECK: "false",
+    VITE_PORT: "3014", VITE_SERVER_URL: "http://localhost:3013", VITE_ENABLE_POLAR: "false",
     WEB_BUILD_DIR: resolve(artifacts, "web-dist"),
     POLAR_ACCESS_TOKEN: "", POLAR_WEBHOOK_SECRET: "", POLAR_SUCCESS_URL: "", AUTH_COOKIE_DOMAIN: "",
     SMTP_HOST: "", SMTP_PORT: "", EMAIL: "", EMAIL_PASSWORD: "", EMAIL_FROM: "",

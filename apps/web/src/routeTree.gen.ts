@@ -16,7 +16,6 @@ import { Route as AcceptInvitationRouteImport } from './routes/accept-invitation
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
-import { Route as SetupRouteImport } from './routes/setup'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AuthAuthCompleteRouteImport } from './routes/_auth/auth-complete'
 import { Route as AuthForgotPasswordRouteImport } from './routes/_auth/forgot-password'
@@ -114,11 +113,6 @@ const OnboardingRoute = OnboardingRouteImport.update({
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   id: '/robots.txt',
   path: '/robots.txt',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SetupRoute = SetupRouteImport.update({
-  id: '/setup',
-  path: '/setup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -464,7 +458,6 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/onboarding': typeof OnboardingRoute
   '/robots.txt': typeof RobotsDottxtRoute
-  '/setup': typeof SetupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/auth-complete': typeof AuthAuthCompleteRoute
   '/forgot-password': typeof AuthForgotPasswordRoute
@@ -536,7 +529,6 @@ export interface FileRoutesByTo {
   '/accept-invitation': typeof AcceptInvitationRoute
   '/onboarding': typeof OnboardingRoute
   '/robots.txt': typeof RobotsDottxtRoute
-  '/setup': typeof SetupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/auth-complete': typeof AuthAuthCompleteRoute
   '/forgot-password': typeof AuthForgotPasswordRoute
@@ -606,7 +598,6 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/onboarding': typeof OnboardingRoute
   '/robots.txt': typeof RobotsDottxtRoute
-  '/setup': typeof SetupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_auth/auth-complete': typeof AuthAuthCompleteRoute
   '/_auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -682,7 +673,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/onboarding'
     | '/robots.txt'
-    | '/setup'
     | '/sitemap.xml'
     | '/auth-complete'
     | '/forgot-password'
@@ -754,7 +744,6 @@ export interface FileRouteTypes {
     | '/accept-invitation'
     | '/onboarding'
     | '/robots.txt'
-    | '/setup'
     | '/sitemap.xml'
     | '/auth-complete'
     | '/forgot-password'
@@ -823,7 +812,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/onboarding'
     | '/robots.txt'
-    | '/setup'
     | '/sitemap.xml'
     | '/_auth/auth-complete'
     | '/_auth/forgot-password'
@@ -900,7 +888,6 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   OnboardingRoute: typeof OnboardingRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
-  SetupRoute: typeof SetupRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   PaymentSuccessRoute: typeof PaymentSuccessRoute
 }
@@ -954,13 +941,6 @@ declare module '@tanstack/react-router' {
       path: '/robots.txt'
       fullPath: '/robots.txt'
       preLoaderRoute: typeof RobotsDottxtRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/setup': {
-      id: '/setup'
-      path: '/setup'
-      fullPath: '/setup'
-      preLoaderRoute: typeof SetupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -1669,7 +1649,6 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   OnboardingRoute: OnboardingRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
-  SetupRoute: SetupRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   PaymentSuccessRoute: PaymentSuccessRoute,
 }

@@ -25,7 +25,6 @@ services:
       BRAND: ${BRAND:?Set BRAND}
       VITE_SERVER_URL: ${VITE_SERVER_URL:?Set VITE_SERVER_URL}
       VITE_ENABLE_POLAR: ${VITE_ENABLE_POLAR:-false}
-      VITE_OWNER_SETUP_CHECK: ${VITE_OWNER_SETUP_CHECK:-false}
       AUTH_SESSION_COOKIE_NAME: ${AUTH_SESSION_COOKIE_NAME:-better-auth.session_token}
     expose:
       - "3001"

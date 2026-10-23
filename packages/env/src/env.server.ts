@@ -36,10 +36,6 @@ export const env = createEnv({
       .string()
       .default("true")
       .transform((val) => val === "true"),
-    OWNER_SETUP_CHECK: z
-      .string()
-      .default("false")
-      .transform((val) => val === "true"),
     COURIER_WORKERS_ENABLED: z.enum(["true", "false"]).default("true").transform((val) => val === "true"),
     E2E_MODE: z
       .string()

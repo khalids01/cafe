@@ -1,5 +1,4 @@
 import Elysia from "elysia";
-import { ownerController } from "./admin/owner/owner.controller";
 import { usersController } from "./admin/users/users.controller";
 import { adminInvitationsController } from "./admin/invitations/invitations.controller";
 import { metadataController } from "./admin/metadata/metadata.controller";
@@ -35,7 +34,6 @@ export const app = new Elysia()
   .use(youtubeController)
   .use(authController)
   .use(sessionController)
-  .use(ownerController)
   .use(usersController)
   .use(rolesController)
   .use(authSettingsController)

@@ -159,7 +159,6 @@ Required defaults:
 - Server on `3000` and web on `3001` when the user authorizes startup.
 - `NODE_ENV=test`.
 - `ENABLE_POLAR=false`.
-- `OWNER_SETUP_CHECK=false` after the test provisioner owns owner creation.
 - OAuth credentials use non-secret test placeholders because OAuth is outside this E2E suite.
 - A dedicated test-only Better Auth secret of at least 32 characters.
 
